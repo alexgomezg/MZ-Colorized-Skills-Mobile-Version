@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.27
+// @version      0.28
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -33,66 +33,24 @@
     btn.style.display = "none";
     btn.id = "stxc_colorize_skills_mobile";
     document.body.appendChild(btn);
-
     btn.addEventListener("click", function () {
-        colorizeSkills()
+        colorizeSkills().then()
     });
 
-    var max_skill="<img src='data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs='/>"
-    var unmaxed_skill="<img src='data:image/gif;base64,R0lGODlhDAAKAJEDAP///8zM/wAA/////yH5BAEAAAMALAAAAAAMAAoAAAIk3CIpYZ0BABJtxvjMgojTIVwKpl0dCQbQJX3T+jpLNDXGlDUFADs='/>"
     let training_icon="data:image/gif;base64,R0lGODlhBgAKAJEDAJnMZpmZmQAAAP///yH5BAEAAAMALAAAAAAGAAoAAAIRXCRhApAMgoPtVXXS2Lz73xUAOw=="
-
-    var maxed_skill_hockey
-
-
-    let maxed_imgs = new Map();
-
     let test_image="data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs=";
     let test_image_hockey="data:image/gif;base64,R0lGODlhDAAKANUkAOXq//8pKunt//ZTVPz19dXZ+tzk/+NAV+bl+Ojs//4wMeWkreXp/f4tLvRMT+Dm/+Xr/7lra/4vMepKSv7///ZRUvz8/tmHhs/Z/+xKSfVeYNCJkfhFRPUxOuBUZvRsb9ri//39//hDQv8oKf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAMAAoAAAZCQBLpMhqJMgiLkEQoOkeDwnLzdIowwuoTlNUWDRSSF/oIkUQBZ6BRAWiEkIlopPgsEhzPMgIQCBgOEiNLQh1PB4RBADs="
-
-    maxed_imgs.set('maxed_soccer', "<img width='"+GM_getValue('soccer_ball_width')+"' height='"+GM_getValue('soccer_ball_height')+"' src='data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs='/>");
-    maxed_imgs.set('unmaxed_soccer', "<img width='"+GM_getValue('soccer_ball_width')+"' height='"+GM_getValue('soccer_ball_height')+"' src='data:image/gif;base64,R0lGODlhDAAKAJEDAP///8zM/wAA/////yH5BAEAAAMALAAAAAAMAAoAAAIk3CIpYZ0BABJtxvjMgojTIVwKpl0dCQbQJX3T+jpLNDXGlDUFADs='/>");
-
-    maxed_imgs.set('maxed_hockey', "<img width='"+GM_getValue('hockey_puck_width')+"' height='"+GM_getValue('hockey_puck_height')+"' src='data:image/gif;base64,R0lGODlhDAAKANUkAOXq//8pKunt//ZTVPz19dXZ+tzk/+NAV+bl+Ojs//4wMeWkreXp/f4tLvRMT+Dm/+Xr/7lra/4vMepKSv7///ZRUvz8/tmHhs/Z/+xKSfVeYNCJkfhFRPUxOuBUZvRsb9ri//39//hDQv8oKf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAMAAoAAAZCQBLpMhqJMgiLkEQoOkeDwnLzdIowwuoTlNUWDRSSF/oIkUQBZ6BRAWiEkIlopPgsEhzPMgIQCBgOEiNLQh1PB4RBADs='/>");
-    maxed_imgs.set('unmaxed_hockey', "<img width='"+GM_getValue('hockey_puck_width')+"' height='"+GM_getValue('hockey_puck_height')+"' src='data:image/gif;base64,R0lGODlhDAAKALMNAOnt/+Xr/9ri/6/A/6G1/73L/52x/8/Z/4Wf/32Z/1x9/0Rr/x9N/////wAAAAAAACH5BAEAAA0ALAAAAAAMAAoAAAQwsDXD2FJB6sot0UnHLYckdoJ5VmmzWoi0nAuxSIEyW0qxJBrFAAAYKCoaSYgD1EQAADs='/>");
+    let maxed_imgs = new Map();
+    maxed_imgs.set('maxed_soccer', "<img alt='' width='"+GM_getValue('soccer_ball_width')+"' height='"+GM_getValue('soccer_ball_height')+"' src='data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs='/>");
+    maxed_imgs.set('unmaxed_soccer', "<img alt='' width='"+GM_getValue('soccer_ball_width')+"' height='"+GM_getValue('soccer_ball_height')+"' src='data:image/gif;base64,R0lGODlhDAAKAJEDAP///8zM/wAA/////yH5BAEAAAMALAAAAAAMAAoAAAIk3CIpYZ0BABJtxvjMgojTIVwKpl0dCQbQJX3T+jpLNDXGlDUFADs='/>");
+    maxed_imgs.set('maxed_hockey', "<img alt='' width='"+GM_getValue('hockey_puck_width')+"' height='"+GM_getValue('hockey_puck_height')+"' src='data:image/gif;base64,R0lGODlhDAAKANUkAOXq//8pKunt//ZTVPz19dXZ+tzk/+NAV+bl+Ojs//4wMeWkreXp/f4tLvRMT+Dm/+Xr/7lra/4vMepKSv7///ZRUvz8/tmHhs/Z/+xKSfVeYNCJkfhFRPUxOuBUZvRsb9ri//39//hDQv8oKf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAMAAoAAAZCQBLpMhqJMgiLkEQoOkeDwnLzdIowwuoTlNUWDRSSF/oIkUQBZ6BRAWiEkIlopPgsEhzPMgIQCBgOEiNLQh1PB4RBADs='/>");
+    maxed_imgs.set('unmaxed_hockey', "<img alt='' width='"+GM_getValue('hockey_puck_width')+"' height='"+GM_getValue('hockey_puck_height')+"' src='data:image/gif;base64,R0lGODlhDAAKALMNAOnt/+Xr/9ri/6/A/6G1/73L/52x/8/Z/4Wf/32Z/1x9/0Rr/x9N/////wAAAAAAACH5BAEAAA0ALAAAAAAMAAoAAAQwsDXD2FJB6sot0UnHLYckdoJ5VmmzWoi0nAuxSIEyW0qxJBrFAAAYKCoaSYgD1EQAADs='/>");
 
     let colors = new Map();
     colors.set('skc_4', '#ff00ff');
     colors.set('skc_3', '#0000ff');
     colors.set('skc_2', '#b8860b');
     colors.set('skc_1', '#ff0000');
-
-    function waitToDOM(function_to_execute, classToSearch, elementIndex,miliseconds) {
-        let interval = setInterval(function () {
-            let elements = document.querySelectorAll(classToSearch);
-            if (elements.length > 0 && elements[elementIndex]) {
-                clearInterval(interval);
-                clearTimeout(timeout);
-                function_to_execute();
-            }
-        }, 100);
-
-
-        let timeout = setTimeout(function () {
-            clearInterval(interval);
-        }, miliseconds);
-    }
-
-
-
-    /*  (function() {
-      const open = XMLHttpRequest.prototype.open;
-      XMLHttpRequest.prototype.open = function(method, url) {
-          this.addEventListener('load', function() {
-              if (url.includes('ajax.php?p=transfer&sub=transfer-search')) {
-                  waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
-              }
-          });
-          return open.apply(this, arguments);
-      };
-  })();*/
-
-
 
 
     const observer = new MutationObserver((mutations) => {
@@ -118,16 +76,9 @@
     const el = document.getElementById("players_container");
     if (el) observer.observe(el, { childList: true, subtree: true });
 
-
-
-    let params = new URLSearchParams(window.location.search);
-    var type="players"
-    if (params.get('p') === 'transfer') {
-        type="market";
-    }
-
     setSport()
     setDeviceFormat()
+    waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
 
     document.addEventListener('click', function(event) {
         const link = event.target.closest('.player_link'); // Busca el ancestro más cercano con esa clase
@@ -136,10 +87,7 @@
         }
     });
 
-
-    waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
-
-
+//Colorize on market
     async function colorizeSkillsOnMarket(){
         let players = document.querySelectorAll(".playerContainer");
         players.forEach(p => {
@@ -169,9 +117,9 @@
             skill_vals.forEach(skill => {
 
 
-                var skillValue = skill.querySelectorAll("span")
-                let valor = parseInt(skillValue[0].innerHTML, 10); // convertir a entero
-                var dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
+                let skillValue = skill.querySelectorAll("span")
+                let valor = parseInt(skillValue[0].innerHTML, 10);
+                let dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
                 for (let i = 0; i < valor; i++) {
                     if (skillValue[0].classList.contains('maxed')) {
                         dataToInsert += maxed_imgs.get('maxed_'+window.sport)
@@ -207,7 +155,7 @@
                 balls_td.querySelector("#container").innerHTML=dataToInsert
 
             });
-            var player_h2 = p.querySelectorAll("span.player_name")
+            let player_h2 = p.querySelectorAll("span.player_name")
             if(!player_h2[0].innerHTML.includes("]")){
                 player_h2[0].innerHTML=player_h2[0].innerHTML+" "+'<span class="stxc_scout" style="white-space: break-spaces; font-weight:normal;">'+hp_text+'</span>'
             }
@@ -217,45 +165,43 @@
 
 
     }
-
-
+//Colorize other pages
     async function colorizeSkills() {
         let params = new URLSearchParams(window.location.search);
-        var type="players"
+        let type="players"
         if (params.get('p') === 'transfer') {
             type="market"
         }
 
         if(type==="market"){
-            colorizeSkillsOnMarket()
+            colorizeSkillsOnMarket().then()
             return;
 
         }
 
-        var playerDivs = document.querySelectorAll('div.playerContainer');
+        let playerDivs = document.querySelectorAll('div.playerContainer');
         playerDivs.forEach((div, divIndex) => {
-            var tableIndex=0;
-            if( window.stxc_device_mobile=="mobile"){
+            let tableIndex=0;
+            if( window.stxc_device_mobile==="mobile"){
                 tableIndex=1;
             }
 
-            var spanClass="clippable"
-
-            var skillsTable = playerDivs[divIndex].querySelectorAll('table.player_skills.player_skills_responsive');
+            let spanClass="clippable"
+            let skillsTable = playerDivs[divIndex].querySelectorAll('table.player_skills.player_skills_responsive');
             if(type==="market"){
                 skillsTable = playerDivs[divIndex].querySelectorAll('table.player_skills.player_skills_transfer');
                 tableIndex=0;
                 spanClass="skill_name"
             }
 
-            var span_id = playerDivs[divIndex].querySelectorAll("span.player_id_span")
-            var player_id = span_id[0].innerHTML
-            var h2 = playerDivs[divIndex].querySelectorAll("h2.subheader.clearfix")
-            var stxc_class=h2[0].querySelectorAll("span.stxc_scout");
+            let span_id = playerDivs[divIndex].querySelectorAll("span.player_id_span")
+            let player_id = span_id[0].innerHTML
+            let h2 = playerDivs[divIndex].querySelectorAll("h2.subheader.clearfix")
+            let stxc_class=h2[0].querySelectorAll("span.stxc_scout");
 
             if((stxc_class.length===0)&&(skillsTable.length>0)){
-                var filas = skillsTable[tableIndex].querySelectorAll('tr');
-                var contSkill = 0
+                let filas = skillsTable[tableIndex].querySelectorAll('tr');
+                let contSkill = 0
                 let maxIndex=11;
                 if(window.sport==="hockey"){
                     contSkill=-1;
@@ -265,16 +211,16 @@
 
                 filas.forEach((fila, i) => {
                     if ((contSkill>-1)&&(contSkill < maxIndex)) {
-                        var divContainer = fila.querySelector('div#container');
-                        var hiddenDiv = divContainer.querySelectorAll('img.skill');
+                        let divContainer = fila.querySelector('div#container');
+                        let hiddenDiv = divContainer.querySelectorAll('img.skill');
                         hiddenDiv[0].style.display = 'none';
 
 
-                        var skillval = fila.querySelectorAll('td.skillval');
-                        var skillValue = skillval[0].querySelectorAll("span")
+                        let skillval = fila.querySelectorAll('td.skillval');
+                        let skillValue = skillval[0].querySelectorAll("span")
 
-                        const valor = parseInt(skillValue[0].innerHTML, 10); // convertir a entero
-                        var dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
+                        let valor = parseInt(skillValue[0].innerHTML, 10);
+                        let dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
                         for (let i = 0; i < valor; i++) {
                             if (skillValue[0].classList.contains('maxed')) {
                                 dataToInsert += maxed_imgs.get('maxed_'+window.sport)
@@ -286,7 +232,7 @@
 
 
                         if(divContainer.innerHTML.includes("blevel")){
-                            dataToInsert +='<img src="'+training_icon+'"/>'
+                            dataToInsert +='<img alt="" src="'+training_icon+'"/>'
                         }
 
 
@@ -294,22 +240,22 @@
 
                         divContainer.innerHTML += dataToInsert
 
-                        if( window.stxc_device_mobile=="mobile"){
+                        if( window.stxc_device_mobile==="mobile"){
 
                             //divContainer.style.marginRight="-3px"
                         }
 
 
-                        var primeraCelda = fila.querySelectorAll('td');
+                        let primeraCelda = fila.querySelectorAll('td');
 
-                        var skillName = primeraCelda[0].querySelectorAll("span."+spanClass)
-                        var idValue=skillName[0].innerHTML
+                        let skillName = primeraCelda[0].querySelectorAll("span."+spanClass)
+                        let idValue=skillName[0].innerHTML
                         if(type==="market"){
-                            var aux=skillName[0].querySelectorAll("span")
+                            let aux=skillName[0].querySelectorAll("span")
                             idValue=aux[0].textContent
                         }
                         skillName[0].id = idValue + "_" + player_id
-                        if( window.stxc_device_mobile=="mobile"){
+                        if( window.stxc_device_mobile==="mobile"){
                             skillName[0].style.marginRight="-3px"
                             skillName[0].style.textAlign="left"
                         }
@@ -325,32 +271,31 @@
                 method: 'GET',
                 url: 'https://www.managerzone.com/ajax.php?p=players&sub=scout_report&pid=' + player_id + '&sport=' + window.sport,
                 onload: function (responseDetailsScout) {
-                    let valores = [];
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(responseDetailsScout.responseText, 'text/html');
                     const aTags = doc.querySelectorAll('span.stars');
-                    var index = 0
-                    var hp_stars = 0
-                    var lp_stars = 0
-                    var ts_stars =0
+                    let index = 0
+                    let hp_stars = 0
+                    let lp_stars = 0
+                    let ts_stars =0
                     aTags.forEach(tag => {
                         const is = tag.querySelectorAll('i');
                         is.forEach(i => {
                             if (index <= 3) {
-                                if (i.className == "fa fa-star fa-2x lit") {
+                                if (i.className === "fa fa-star fa-2x lit") {
                                     hp_stars++;
                                 }
                             }
 
 
                             if (index > 3 && index <= 7) {
-                                if (i.className == "fa fa-star fa-2x lit") {
+                                if (i.className === "fa fa-star fa-2x lit") {
                                     lp_stars++;
                                 }
                             }
 
                             if (index > 7) {
-                                if (i.className == "fa fa-star fa-2x lit") {
+                                if (i.className === "fa fa-star fa-2x lit") {
                                     ts_stars++
                                 }
                             }
@@ -362,21 +307,21 @@
 
 
 
-                    var hp_value,hp_value1,lp_value,lp_value1
+                    let hp_value,hp_value1,lp_value,lp_value1
 
                     const uls = doc.querySelectorAll('ul');
                     index = 0;
                     uls.forEach(ul => {
-                            var lis = ul.querySelectorAll('li');
+                        let lis = ul.querySelectorAll('li');
                             if (lis.length > 2) {
-                                var stars_value = 0
-                                var spanIndex = 0;
-                                var spans1 = lis[1].querySelectorAll('span')
-                                var spans2 = lis[2].querySelectorAll('span')
+                                let stars_value
+                                let spanIndex = 0;
+                                let spans1 = lis[1].querySelectorAll('span')
+                                let spans2 = lis[2].querySelectorAll('span')
                                 if (spans1.length > 1) {
                                     spanIndex = 1
                                 }
-                                if (index == 0) {
+                                if (index === 0) {
                                     stars_value = hp_stars
                                     hp_value=spans1[spanIndex].textContent
                                     hp_value1=spans2[spanIndex].textContent
@@ -399,10 +344,9 @@
                         }
                     );
 
-                    var as = h2[0].querySelectorAll("a.subheader")
-
+                    let as = h2[0].querySelectorAll("a.subheader")
                     if((stxc_class.length===0)&&(hp_value1!==undefined)){
-                        if( window.stxc_device_mobile=="mobile"){
+                        if( window.stxc_device_mobile==="mobile"){
                             h2[0].innerHTML+='<span class="stxc_scout" style="font-size: smaller; white-space: nowrap;"> [H'+hp_stars+' '+hp_value+','+hp_value1+'] [L'+lp_stars+' '+lp_value+','+lp_value1+'] S'+ts_stars+'</span>'
                         }else{
                             let newSpan = document.createElement('span');
@@ -428,7 +372,7 @@
     }
 
 
-
+///UTILS////
     function setSport(){
 
         let sportCookie=getSportByMessenger()
@@ -446,12 +390,11 @@
 
 
     }
-
     function setDeviceFormat(){
         if(!document.getElementById("deviceFormatStx")){
-            var script = document.createElement('script');
+            let script = document.createElement('script');
             script.textContent = `
-        var newElemenDevicestxc_mobile = document.createElement("input");
+        let newElemenDevicestxc_mobile = document.createElement("input");
         newElemenDevicestxc_mobile.id= "deviceFormatstxc_mobile";
         newElemenDevicestxc_mobile.type = "hidden";
         newElemenDevicestxc_mobile.value=window.device;
@@ -464,7 +407,6 @@
         }
         //window.stxc_device_mobile="mobile";
     }
-
     function getSportByMessenger() {
         if (document.getElementById("messenger")) {
 
@@ -474,7 +416,6 @@
         }
         return ""
     }
-
     function getSportByLink(){
         let element = document.getElementById("settings-wrapper");
         if (element) {
@@ -488,11 +429,10 @@
             }
         }
     }
-
     function getSportByScript(){
         const script = document.createElement('script');
         script.textContent = `
-    let newElement = document.createElement("input");
+        var newElement = document.createElement("input");
         newElement.id= "stxc_sport";
         newElement.type = "hidden";
         newElement.value=window.ajaxSport;
@@ -504,13 +444,11 @@
         script.remove();
         return document.getElementById("stxc_sport").value
     }
-
     function getCookie(nombre) {
         let regex = new RegExp("(?:(?:^|.*;\\s*)" + nombre + "\\s*\\=\\s*([^;]*).*$)|^.*$");
         let valorCookie = document.cookie.replace(regex, "$1");
         return decodeURIComponent(valorCookie);
     }
-
     function createModalMenu() {
         const style = document.createElement('style');
         style.textContent = `
@@ -623,7 +561,7 @@
                 </div>
             </div>
             <div class="stxc-preview-box">
-                <img id="soccer_preview" src="${test_image}" style="width:${GM_getValue('soccer_ball_width')}px; height:${GM_getValue('soccer_ball_height')}px;">
+                <img alt='' id="soccer_preview" src="${test_image}" style="width:${GM_getValue('soccer_ball_width')}px; height:${GM_getValue('soccer_ball_height')}px;">
             </div>
         </div>
     </div>`;
@@ -646,7 +584,7 @@
                 </div>
             </div>
             <div class="stxc-preview-box">
-                <img id="hockey_preview" src="${test_image_hockey}" style="width:${GM_getValue('hockey_puck_width')}px; height:${GM_getValue('hockey_puck_height')}px;">
+                <img alt='' id="hockey_preview" src="${test_image_hockey}" style="width:${GM_getValue('hockey_puck_width')}px; height:${GM_getValue('hockey_puck_height')}px;">
             </div>
         </div>
     </div>`;
@@ -700,8 +638,21 @@
             window.location.reload();
         });
     }
+    function waitToDOM(function_to_execute, classToSearch, elementIndex,miliseconds) {
+        let interval = setInterval(function () {
+            let elements = document.querySelectorAll(classToSearch);
+            if (elements.length > 0 && elements[elementIndex]) {
+                clearInterval(interval);
+                clearTimeout(timeout);
+                function_to_execute();
+            }
+        }, 100);
 
 
+        let timeout = setTimeout(function () {
+            clearInterval(interval);
+        }, miliseconds);
+    }
 
     setTimeout(function () {
 
@@ -710,8 +661,5 @@
             document.getElementById("legendDivStxc").style.bottom="67%"
         }
     }, 2000);
-
-
-
 
 })();
