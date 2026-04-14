@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.29
+// @version      0.30
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -266,7 +266,8 @@
                         skillName[0].id = idValue + "_" + player_id
                         if( window.stxc_device_mobile==="mobile"){
                             skillName[0].style.marginRight="-3px"
-                            skillName[0].style.textAlign="left"
+                            //skillName[0].style.textAlign="left"
+                            skillName[0].style.justifyContent="start";
                         }
 
 
