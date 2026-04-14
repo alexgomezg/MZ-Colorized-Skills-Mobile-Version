@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.28
+// @version      0.29
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -249,7 +249,16 @@
                         let primeraCelda = fila.querySelectorAll('td');
 
                         let skillName = primeraCelda[0].querySelectorAll("span."+spanClass)
-                        let idValue=skillName[0].innerHTML
+                        let idValue
+                        if(skillName.length>0){
+                            idValue=skillName[0].innerHTML
+                        }else{
+                            skillName = primeraCelda[0].querySelectorAll("span.skill_name")
+                            let spans_=skillName[0].querySelectorAll("span")
+                            idValue=spans_[0].innerText
+
+                        }
+
                         if(type==="market"){
                             let aux=skillName[0].querySelectorAll("span")
                             idValue=aux[0].textContent
@@ -312,7 +321,7 @@
                     const uls = doc.querySelectorAll('ul');
                     index = 0;
                     uls.forEach(ul => {
-                        let lis = ul.querySelectorAll('li');
+                            let lis = ul.querySelectorAll('li');
                             if (lis.length > 2) {
                                 let stars_value
                                 let spanIndex = 0;
