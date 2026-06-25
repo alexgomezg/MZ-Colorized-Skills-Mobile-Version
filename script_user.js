@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.42
+// @version      0.43
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -510,6 +510,7 @@
                         let doc = parser.parseFromString(responseText, 'text/html');
                         let player_container = doc.getElementById("thePlayers_0")
                         if (!player_container) {
+                            alert("aqui_-")
                             skillIndex =await trainingSkillsIndex()
                             let maxsMap=await getTrainingHistory(player_id)
                             let maxs = [...maxsMap.values()];
@@ -546,6 +547,7 @@
                         resolve(obj)
                     })
                     .catch(error => {
+                        alert(error)
                         reject(new Error("Error loading: " + link + " | " + error));
                     });
 
