@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.41
+// @version      0.42
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -78,6 +78,7 @@
     if (el) observer.observe(el, { childList: true, subtree: true });
     setSport()
     setDeviceFormat()
+    GM_setValue("players_maxs_" + window.sport,"[]");
     let player_maxs_map = new Map(JSON.parse(GM_getValue("players_maxs_"+window.sport, "[]")));
     let params = new URLSearchParams(window.location.search);
     if (params.get('p') === 'tactics') {
