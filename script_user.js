@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.40
+// @version      0.41
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
 // @match        https://www.managerzone.com/*
+// @connect      managerzone.com
 // @icon         https://statsxente.com/MZ1/View/Images/main_icon.png
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
@@ -519,9 +520,9 @@
                         }
                         let maxs = []
                         let classDiv=".player_skills.player_skills_transfer"
-                            if(window.stxc_device_mobile==="mobile"){
-                                classDiv=".player_skills.player_skills_responsive"
-                            }
+                        if(window.stxc_device_mobile==="mobile"){
+                            classDiv=".player_skills.player_skills_responsive"
+                        }
                         let div = player_container.querySelector(classDiv)
                         let skill_vals = div.querySelectorAll(".skillval");
                         let cont = 0;
@@ -538,6 +539,7 @@
                         });
 
                         let obj = {id: player_container.querySelector('span.player_id_span').textContent, maxs: maxs, date: new Date()}
+                        alert(obj)
                         player_maxs_map.set(player_container.querySelector('span.player_id_span').textContent, obj)
                         GM_setValue("players_maxs_" + window.sport, JSON.stringify([...player_maxs_map]));
                         resolve(obj)
@@ -808,16 +810,11 @@
                 .then(texto => {
                     let jsonStr = texto.trim().slice(1, -1);
                     let data = JSON.parse(jsonStr);
-
                     let skillIndex = new Map();
-
                     Object.entries(data).forEach(([key, skill]) => {
                         skillIndex.set(skill.graphIndex, skill.name)
-
                     });
-
                     resolve(skillIndex)
-
                 })
                 .catch(error => reject(error));
         });
