@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.44
+// @version      0.45
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -771,7 +771,7 @@
 
     }
     async function getTrainingHistory(player_id) {
-        const unmaxMap = new Map(
+        let unmaxMap = new Map(
             Array.from({ length: 16 }, (_, i) => [i, `unmax`])
         );
         var link = "https://www.managerzone.com/ajax.php?p=trainingGraph&sub=getJsonTrainingHistory&sport=" + window.sport + "&player_id=" + player_id
@@ -787,7 +787,7 @@
         }
         let match = texto.match(/var\s+series\s*=\s*(\[[\s\S]*?\]);(?:\s*var|\s*$)/);
         let series = JSON.parse(match[1]);
-        alert(skillIndex)
+        alert(JSON.stringify([...skillIndex], null, 2));
         series.forEach((serie, index0) => {
             if (serie["showInNavigator"] === "true") {
                 const dataArray = serie["data"];
@@ -801,6 +801,7 @@
                 }
             }
         });
+        alert(JSON.stringify([...unmaxMap], null, 2));
         return unmaxMap;
     }
     function trainingSkillsIndex() {
