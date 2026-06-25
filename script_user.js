@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.47
+// @version      0.48
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -231,7 +231,6 @@
         let player_maxs
         let players = document.querySelectorAll(".playerContainer");
         for (const p of players) {
-            console.log(p)
             let id=p.querySelector('span.player_id_span').textContent
             let classDiv=".player_skills.player_skills_responsive"
             let divIndex=0;
@@ -240,7 +239,6 @@
                 divIndex=1;
             }
             let div=p.querySelectorAll(classDiv);
-            console.log(div)
             let skill_vals=[]
             if (div.length>0){
                 skill_vals= div[divIndex].querySelectorAll(".skillval");
