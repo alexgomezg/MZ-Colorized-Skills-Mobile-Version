@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.39
+// @version      0.40
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -518,7 +518,11 @@
                             return;
                         }
                         let maxs = []
-                        let div = player_container.querySelector(".player_skills.player_skills_transfer")
+                        let classDiv=".player_skills.player_skills_transfer"
+                            if(window.stxc_device_mobile==="mobile"){
+                                classDiv=".player_skills.player_skills_responsive"
+                            }
+                        let div = player_container.querySelector(classDiv)
                         let skill_vals = div.querySelectorAll(".skillval");
                         let cont = 0;
                         skill_vals.forEach(skill => {
