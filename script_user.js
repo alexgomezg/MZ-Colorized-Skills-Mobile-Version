@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.45
+// @version      0.46
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -231,8 +231,17 @@
         let player_maxs
         let players = document.querySelectorAll(".playerContainer");
         for (const p of players) {
+            console.log(p)
             let id=p.querySelector('span.player_id_span').textContent
-            let skill_vals= p.querySelectorAll(".skillval");
+            let classDiv=".player_skills.player_skills_responsive"
+            if(window.stxc_device_mobile==="mobile"){
+                classDiv=".player_skills.player_skills_responsive"
+            }
+            let div=p.querySelector(classDiv);
+            let skill_vals=[]
+            if (div){
+                skill_vals= div.querySelectorAll(".skillval");
+            }
             if(type==="shortlist"){
                 if(skill_vals.length>0){
                     player_maxs=await fetchPlayerTableSkills(id)
@@ -314,6 +323,7 @@
                     hp_text="[H"+hp_stars+" "+hp_skills[0]+","+hp_skills[1]+"] "+"[L"+lp_stars+" "+lp_skills[0]+","+lp_skills[1]+"] S"+sp_stars
                 }
                 balls_td.querySelector("#container").innerHTML=dataToInsert
+
 
             });
             let player_h2 = p.querySelectorAll("span.player_name")
@@ -510,7 +520,6 @@
                         let doc = parser.parseFromString(responseText, 'text/html');
                         let player_container = doc.getElementById("thePlayers_0")
                         if (!player_container) {
-                            alert("aqui_-")
                             skillIndex =await trainingSkillsIndex()
                             let maxsMap=await getTrainingHistory(player_id)
                             let maxs = [...maxsMap.values()];
@@ -541,13 +550,11 @@
                         });
 
                         let obj = {id: player_container.querySelector('span.player_id_span').textContent, maxs: maxs, date: new Date()}
-                        alert(obj)
                         player_maxs_map.set(player_container.querySelector('span.player_id_span').textContent, obj)
                         GM_setValue("players_maxs_" + window.sport, JSON.stringify([...player_maxs_map]));
                         resolve(obj)
                     })
                     .catch(error => {
-                        alert(error)
                         reject(new Error("Error loading: " + link + " | " + error));
                     });
 
@@ -787,7 +794,6 @@
         }
         let match = texto.match(/var\s+series\s*=\s*(\[[\s\S]*?\]);(?:\s*var|\s*$)/);
         let series = JSON.parse(match[1]);
-        alert(JSON.stringify([...skillIndex], null, 2));
         series.forEach((serie, index0) => {
             if (serie["showInNavigator"] === "true") {
                 const dataArray = serie["data"];
@@ -801,7 +807,6 @@
                 }
             }
         });
-        alert(JSON.stringify([...unmaxMap], null, 2));
         return unmaxMap;
     }
     function trainingSkillsIndex() {
