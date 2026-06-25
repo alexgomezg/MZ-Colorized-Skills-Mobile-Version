@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.43
+// @version      0.44
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -787,6 +787,7 @@
         }
         let match = texto.match(/var\s+series\s*=\s*(\[[\s\S]*?\]);(?:\s*var|\s*$)/);
         let series = JSON.parse(match[1]);
+        alert(skillIndex)
         series.forEach((serie, index0) => {
             if (serie["showInNavigator"] === "true") {
                 const dataArray = serie["data"];
