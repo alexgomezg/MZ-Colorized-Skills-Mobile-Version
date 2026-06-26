@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.48
+// @version      0.49
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -29,15 +29,13 @@
     Object.entries(defaults).forEach(([k, v]) => {
         if (GM_getValue(k) === undefined) GM_setValue(k, v);
     });
-
     let btn = document.createElement("button");
     btn.style.display = "none";
     btn.id = "stxc_colorize_skills_mobile";
     document.body.appendChild(btn);
     btn.addEventListener("click", function () {
-        colorizeSkills().then()
+        colorizeSkills("none").then()
     });
-
     let training_icon="data:image/gif;base64,R0lGODlhBgAKAJEDAJnMZpmZmQAAAP///yH5BAEAAAMALAAAAAAGAAoAAAIRXCRhApAMgoPtVXXS2Lz73xUAOw=="
     let test_image="data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs=";
     let test_image_hockey="data:image/gif;base64,R0lGODlhDAAKANUkAOXq//8pKunt//ZTVPz19dXZ+tzk/+NAV+bl+Ojs//4wMeWkreXp/f4tLvRMT+Dm/+Xr/7lra/4vMepKSv7///ZRUvz8/tmHhs/Z/+xKSfVeYNCJkfhFRPUxOuBUZvRsb9ri//39//hDQv8oKf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAMAAoAAAZCQBLpMhqJMgiLkEQoOkeDwnLzdIowwuoTlNUWDRSSF/oIkUQBZ6BRAWiEkIlopPgsEhzPMgIQCBgOEiNLQh1PB4RBADs="
@@ -46,14 +44,11 @@
     maxed_imgs.set('unmaxed_soccer', "<img alt='' width='"+GM_getValue('soccer_ball_width')+"' height='"+GM_getValue('soccer_ball_height')+"' src='data:image/gif;base64,R0lGODlhDAAKAJEDAP///8zM/wAA/////yH5BAEAAAMALAAAAAAMAAoAAAIk3CIpYZ0BABJtxvjMgojTIVwKpl0dCQbQJX3T+jpLNDXGlDUFADs='/>");
     maxed_imgs.set('maxed_hockey', "<img alt='' width='"+GM_getValue('hockey_puck_width')+"' height='"+GM_getValue('hockey_puck_height')+"' src='data:image/gif;base64,R0lGODlhDAAKANUkAOXq//8pKunt//ZTVPz19dXZ+tzk/+NAV+bl+Ojs//4wMeWkreXp/f4tLvRMT+Dm/+Xr/7lra/4vMepKSv7///ZRUvz8/tmHhs/Z/+xKSfVeYNCJkfhFRPUxOuBUZvRsb9ri//39//hDQv8oKf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAMAAoAAAZCQBLpMhqJMgiLkEQoOkeDwnLzdIowwuoTlNUWDRSSF/oIkUQBZ6BRAWiEkIlopPgsEhzPMgIQCBgOEiNLQh1PB4RBADs='/>");
     maxed_imgs.set('unmaxed_hockey', "<img alt='' width='"+GM_getValue('hockey_puck_width')+"' height='"+GM_getValue('hockey_puck_height')+"' src='data:image/gif;base64,R0lGODlhDAAKALMNAOnt/+Xr/9ri/6/A/6G1/73L/52x/8/Z/4Wf/32Z/1x9/0Rr/x9N/////wAAAAAAACH5BAEAAA0ALAAAAAAMAAoAAAQwsDXD2FJB6sot0UnHLYckdoJ5VmmzWoi0nAuxSIEyW0qxJBrFAAAYKCoaSYgD1EQAADs='/>");
-
     let colors = new Map();
     colors.set('skc_4', '#ff00ff');
     colors.set('skc_3', '#0000ff');
     colors.set('skc_2', '#b8860b');
     colors.set('skc_1', '#ff0000');
-
-
     const observer = new MutationObserver((mutations) => {
         const changed = mutations.some((mutation) =>
                 mutation.addedNodes.length > 0 && (
@@ -70,7 +65,6 @@
                 )
         );
         if (changed && !document.getElementById("players_container_stx")) {
-            console.log("----Event Colors----")
             waitToDOM(colorizeSkills, ".playerContainer", 0,7000);
         }
     });
@@ -85,7 +79,6 @@
         waitToDOM(colorizeSkills, ".buttonClassRight", 0,7000)
     }
     waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
-
     document.addEventListener('click', function(event) {
         const link = event.target.closest('.player_link');
         if (link) {
@@ -195,28 +188,31 @@
 
     }
 //Colorize other pages
-    async function colorizeSkills(){
+    async function colorizeSkills(type_= "none"){
         let params = new URLSearchParams(window.location.search);
         let type="players"
-        if (params.get('p') === 'transfer') {
-            type="market"
-        }
+        if(type_==="none"){
+            if (params.get('p') === 'transfer') {
+                type="market"
+            }
 
-        if (params.get('p') === 'shortlist') {
-            type="shortlist"
-        }
+            if (params.get('p') === 'shortlist') {
+                type="shortlist"
+            }
 
-        if(type==="market"){
-            colorizeSkillsOnMarket().then()
-            return;
-        }
+            if(type==="market"){
+                colorizeSkillsOnMarket().then()
+                return;
+            }
 
-        if(params.get('p')==="tactics"){
-            let target = document.querySelector(".player-info-content");
-            colorizeSkillsOnTactics().then()
-            return;
+            if(params.get('p')==="tactics"){
+                let target = document.querySelector(".player-info-content");
+                colorizeSkillsOnTactics().then()
+                return;
+            }
+        }else{
+            type=type_
         }
-
 
 
 
@@ -387,24 +383,6 @@
 
                         let balls_td = skill.previousElementSibling;
                         let skill_name_td=skill.previousElementSibling.previousElementSibling;
-                        /*if(scout.length>0){
-                            let spans=skill_name_td.querySelector("span")
-                            let spans_name=spans.querySelector("span")
-                            if(skill_name_td.querySelector("span.sup")){
-
-                                if(skill_name_td.querySelector("span.sup").textContent==="1"){
-                                    skill_name_td.style.color=colors.get("skc_"+hp_stars)
-                                    skill_name_td.style.fontWeight = "bold"
-                                    hp_skills.push(spans_name.textContent)
-                                }
-
-                                if(skill_name_td.querySelector("span.sup").textContent==="2"){
-                                    skill_name_td.style.color=colors.get("skc_"+lp_stars)
-                                    lp_skills.push(spans_name.textContent)
-                                }
-                            }
-                        }*/
-                        //balls_td.querySelector("#container").innerHTML=dataToInsert
                         balls_td.innerHTML=dataToInsert
 
                     });
@@ -416,17 +394,14 @@
             childList: true
         });
 
+        colorizeSkills("players")
 
-        let player_maxs
+
+        /*let player_maxs
         let players = document.querySelectorAll(".playerContainer");
         for (const p of players) {
             let id=p.querySelector('span.player_id_span').textContent
             let skill_vals= p.querySelectorAll(".skillval");
-            if(type==="shortlist"){
-                if(skill_vals.length>0){
-                    player_maxs=await fetchPlayerTableSkills(id)
-                }
-            }
             let scout = p.querySelectorAll(".scout_report_row.box_dark");
             let hp_stars=0;
             let lp_stars=0;
@@ -436,38 +411,28 @@
                 hp_stars = scout_divs[0].querySelectorAll("i").length;
                 lp_stars = scout_divs[1].querySelectorAll("i").length;
                 sp_stars = scout_divs[2].querySelectorAll("i").length;
-
-
             }
-
-
-
-
-
             let hp_skills=[]
             let lp_skills=[]
             let hp_text=""
             let contIndexSkill=0;
             skill_vals.forEach(skill => {
-
                 let balls_td = skill.previousElementSibling;
                 let divContainer = balls_td.querySelector('div#container');
                 let skillValue = skill.querySelectorAll("span")
                 let valor = parseInt(skillValue[0].innerHTML, 10);
                 let dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
                 for (let i = 0; i < valor; i++) {
-                    if (player_maxs.maxs[contIndexSkill]==="maxed") {
+                     if (skillValue[0].classList.contains('maxed')) {
                         dataToInsert += maxed_imgs.get('maxed_'+window.sport)
                     } else {
                         dataToInsert += maxed_imgs.get('unmaxed_'+window.sport)
                     }
-
                 }
                 contIndexSkill++;
                 if(divContainer.innerHTML.includes("blevel")){
                     dataToInsert +='<img alt="" src="'+training_icon+'"/>'
                 }
-
                 let fila = skill.closest('tr');
                 let skill_name_td = fila.querySelector('.skill_name span').closest('td');;
                 if(scout.length>0){
@@ -499,10 +464,31 @@
 
             });
 
+                let player_h2 = p.querySelectorAll("span.player_name")
+            let player_id = p.querySelector("span.player_id_span").innerHTML
+            if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
+                if( window.stxc_device_mobile==="mobile"){
+                    let h2 = p.querySelectorAll("h2.subheader.clearfix")
+                    let as = h2[0].querySelectorAll("span.floatRight")
+                    let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
+                    as[0].insertAdjacentHTML('afterend',txt)
+                }else{
+                    let as = player_h2[0].querySelectorAll("a.subheader")
+                    let newSpan = document.createElement('span');
+                    newSpan.className="stxc_scout"
+                    newSpan.style.whiteSpace = "nowrap";
+                    newSpan.style.fontSize="100%"
+                    newSpan.style.fontWeight="normal"
+                    newSpan.innerHTML = ' '+hp_text
+                    newSpan.id='stxc_id_'+player_id
+                    player_h2[0].insertAdjacentElement('afterend',newSpan);
+                }
 
-        }
+            }
+
+
+        }*/
     }
-
 //FETCH FUNCTIONS
     async function fetchPlayerTableSkills(player_id) {
         let link = "https://www.managerzone.com/?p=transfer&sub=players&u=" + player_id
@@ -521,6 +507,8 @@
                         let doc = parser.parseFromString(responseText, 'text/html');
                         let player_container = doc.getElementById("thePlayers_0")
                         if (!player_container) {
+                            let params = new URLSearchParams(window.location.search);
+                            if (params.get('p') !== 'shortlist')return;
                             skillIndex =await trainingSkillsIndex()
                             let maxsMap=await getTrainingHistory(player_id)
                             let maxs = [...maxsMap.values()];
@@ -561,222 +549,6 @@
 
             }
         );
-    }
-    async function colorizeSkillsOld() {
-        let params = new URLSearchParams(window.location.search);
-        let type="players"
-        if (params.get('p') === 'transfer') {
-            type="market"
-        }
-
-        if(type==="market"){
-            colorizeSkillsOnMarket().then()
-            return;
-
-        }
-
-        let playerDivs = document.querySelectorAll('div.playerContainer');
-        playerDivs.forEach((div, divIndex) => {
-            let tableIndex=0;
-            if( window.stxc_device_mobile==="mobile"){
-                tableIndex=1;
-            }
-
-            let spanClass="clippable"
-            let skillsTable = playerDivs[divIndex].querySelectorAll('table.player_skills.player_skills_responsive');
-            if(type==="market"){
-                skillsTable = playerDivs[divIndex].querySelectorAll('table.player_skills.player_skills_transfer');
-                tableIndex=0;
-                spanClass="skill_name"
-            }
-
-            let span_id = playerDivs[divIndex].querySelectorAll("span.player_id_span")
-            let player_id = span_id[0].innerHTML
-            let h2 = playerDivs[divIndex].querySelectorAll("h2.subheader.clearfix")
-            let stxc_class=h2[0].querySelectorAll("span.stxc_scout");
-
-            if((stxc_class.length===0)&&(skillsTable.length>0)){
-                let filas = skillsTable[tableIndex].querySelectorAll('tr');
-                let contSkill = 0
-                let maxIndex=11;
-                if(window.sport==="hockey"){
-                    contSkill=-1;
-                    maxIndex=10;
-                }
-
-
-                filas.forEach((fila, i) => {
-                    if ((contSkill>-1)&&(contSkill < maxIndex)) {
-                        let divContainer = fila.querySelector('div#container');
-                        let hiddenDiv = divContainer.querySelectorAll('img.skill');
-                        hiddenDiv[0].style.display = 'none';
-
-
-                        let skillval = fila.querySelectorAll('td.skillval');
-                        let skillValue = skillval[0].querySelectorAll("span")
-
-                        let valor = parseInt(skillValue[0].innerHTML, 10);
-                        let dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
-                        for (let i = 0; i < valor; i++) {
-                            if (skillValue[0].classList.contains('maxed')) {
-                                dataToInsert += maxed_imgs.get('maxed_'+window.sport)
-                            } else {
-                                dataToInsert += maxed_imgs.get('unmaxed_'+window.sport)
-                            }
-
-                        }
-
-
-                        if(divContainer.innerHTML.includes("blevel")){
-                            dataToInsert +='<img alt="" src="'+training_icon+'"/>'
-                        }
-
-
-                        dataToInsert += +'</div>'
-
-                        divContainer.innerHTML += dataToInsert
-
-                        if( window.stxc_device_mobile==="mobile"){
-
-                            //divContainer.style.marginRight="-3px"
-                        }
-
-
-                        let primeraCelda = fila.querySelectorAll('td');
-
-                        let skillName = primeraCelda[0].querySelectorAll("span."+spanClass)
-                        let idValue
-                        if(skillName.length>0){
-                            idValue=skillName[0].innerHTML
-                        }else{
-                            skillName = primeraCelda[0].querySelectorAll("span.skill_name")
-                            let spans_=skillName[0].querySelectorAll("span")
-                            idValue=spans_[0].innerText
-
-                        }
-
-                        if(type==="market"){
-                            let aux=skillName[0].querySelectorAll("span")
-                            idValue=aux[0].textContent
-                        }
-                        skillName[0].id = idValue + "_" + player_id
-                        if( window.stxc_device_mobile==="mobile"){
-                            skillName[0].style.marginRight="-3px"
-                            skillName[0].style.justifyContent="start";
-                        }
-
-
-                    }
-                    contSkill++
-                });
-
-            }
-
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: 'https://www.managerzone.com/ajax.php?p=players&sub=scout_report&pid=' + player_id + '&sport=' + window.sport,
-                onload: function (responseDetailsScout) {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(responseDetailsScout.responseText, 'text/html');
-                    const aTags = doc.querySelectorAll('span.stars');
-                    let index = 0
-                    let hp_stars = 0
-                    let lp_stars = 0
-                    let ts_stars =0
-                    aTags.forEach(tag => {
-                        const is = tag.querySelectorAll('i');
-                        is.forEach(i => {
-                            if (index <= 3) {
-                                if (i.className === "fa fa-star fa-2x lit") {
-                                    hp_stars++;
-                                }
-                            }
-
-
-                            if (index > 3 && index <= 7) {
-                                if (i.className === "fa fa-star fa-2x lit") {
-                                    lp_stars++;
-                                }
-                            }
-
-                            if (index > 7) {
-                                if (i.className === "fa fa-star fa-2x lit") {
-                                    ts_stars++
-                                }
-                            }
-
-                            index++;
-                        });
-
-                    });
-
-
-
-                    let hp_value,hp_value1,lp_value,lp_value1
-
-                    const uls = doc.querySelectorAll('ul');
-                    index = 0;
-                    uls.forEach(ul => {
-                            let lis = ul.querySelectorAll('li');
-                            if (lis.length > 2) {
-                                let stars_value
-                                let spanIndex = 0;
-                                let spans1 = lis[1].querySelectorAll('span')
-                                let spans2 = lis[2].querySelectorAll('span')
-                                if (spans1.length > 1) {
-                                    spanIndex = 1
-                                }
-                                if (index === 0) {
-                                    stars_value = hp_stars
-                                    hp_value=spans1[spanIndex].textContent
-                                    hp_value1=spans2[spanIndex].textContent
-                                    if(skillsTable.length>0){
-                                        document.getElementById(spans1[spanIndex].textContent + "_" + player_id).style.fontWeight = "bold"
-                                        document.getElementById(spans2[spanIndex].textContent + "_" + player_id).style.fontWeight = "bold"
-                                    }
-                                } else {
-                                    stars_value = lp_stars
-                                }
-                                lp_value=spans1[spanIndex].textContent
-                                lp_value1=spans2[spanIndex].textContent
-                                if(skillsTable.length>0){
-                                    document.getElementById(spans1[spanIndex].textContent + "_" + player_id).style.color = colors.get("skc_" + stars_value)
-                                    document.getElementById(spans2[spanIndex].textContent + "_" + player_id).style.color = colors.get("skc_" + stars_value)
-                                }
-                                index++
-                            }
-
-                        }
-                    );
-
-                    //let as = h2[0].querySelectorAll("a.subheader")
-                    let as = h2[0].querySelectorAll("span.floatRight")
-                    if((stxc_class.length===0)&&(hp_value1!==undefined)){
-                        if( window.stxc_device_mobile==="mobile"){
-                            h2[0].innerHTML+='<span class="stxc_scout" style="font-size: smaller; white-space: nowrap;"> [H'+hp_stars+' '+hp_value+','+hp_value1+'] [L'+lp_stars+' '+lp_value+','+lp_value1+'] S'+ts_stars+'</span>'
-                            //h2[0].innerHTML+='<span id="player_id_'+player_id+'" class="stxc_scout" style="font-size: smaller; white-space: nowrap;"> [H'+hp_stars+' '+hp_value+','+hp_value1+'] [L'+lp_stars+' '+lp_value+','+lp_value1+'] S'+ts_stars+'</span>'
-                        }else{
-                            let newSpan = document.createElement('span');
-                            //newSpan.id='player_id_'+player_id
-                            newSpan.className="stxc_scout"
-                            newSpan.style.whiteSpace = "nowrap";
-                            newSpan.innerHTML = ' [H'+hp_stars+' '+hp_value+','+hp_value1+'] [L'+lp_stars+' '+lp_value+','+lp_value1+'] S'+ts_stars
-                            as[0].insertAdjacentElement('afterend',newSpan);
-                        }
-                    }else{
-                        let newSpan = document.createElement('span');
-                        newSpan.className="stxc_scout"
-                        newSpan.style.display = "none";
-                        as[0].insertAdjacentElement('afterend',newSpan);
-                    }
-
-
-
-                }
-            });
-
-        });
-
     }
     async function getTrainingHistory(player_id) {
         let unmaxMap = new Map(
