@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.51
+// @version      0.52
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -225,7 +225,7 @@
                 }, 2000);
             });
         }
-        window.stxc_device_mobile="mobile"
+
         let player_maxs
         let players = document.querySelectorAll(".playerContainer");
         for (const p of players) {
@@ -237,7 +237,6 @@
                 divIndex=0;
             }
             let div=p.querySelectorAll(classDiv);
-            console.log(div)
             let skill_vals=[]
             if (div.length>0){
                 skill_vals= div[divIndex].querySelectorAll(".skillval");
@@ -268,6 +267,7 @@
             let lp_skills=[]
             let hp_text=""
             let contIndexSkill=0;
+            skill_vals= p.querySelectorAll(".skillval");
             skill_vals.forEach(skill => {
 
                 let balls_td = skill.previousElementSibling;
