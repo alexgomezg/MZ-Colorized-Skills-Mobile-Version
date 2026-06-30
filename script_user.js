@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.49
+// @version      0.50
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -88,6 +88,7 @@
 
 //Colorize on market
     async function colorizeSkillsOnMarket(){
+        setDeviceFormat()
         let players = document.querySelectorAll(".playerContainer");
         players.forEach(p => {
             let scout = p.querySelectorAll(".scout_report_row.box_dark");
@@ -189,6 +190,7 @@
     }
 //Colorize other pages
     async function colorizeSkills(type_= "none"){
+        setDeviceFormat()
         let params = new URLSearchParams(window.location.search);
         let type="players"
         if(type_==="none"){
