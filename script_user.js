@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.50
+// @version      0.51
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -225,7 +225,7 @@
                 }, 2000);
             });
         }
-
+        window.stxc_device_mobile="mobile"
         let player_maxs
         let players = document.querySelectorAll(".playerContainer");
         for (const p of players) {
@@ -234,9 +234,10 @@
             let divIndex=0;
             if(window.stxc_device_mobile==="mobile"){
                 classDiv=".player_skills.player_skills_responsive"
-                divIndex=1;
+                divIndex=0;
             }
             let div=p.querySelectorAll(classDiv);
+            console.log(div)
             let skill_vals=[]
             if (div.length>0){
                 skill_vals= div[divIndex].querySelectorAll(".skillval");
@@ -638,6 +639,12 @@
             script.remove();
             window.stxc_device_mobile=document.getElementById("deviceFormatstxc_mobile").value
         }
+
+
+        window.stxc_device_mobile=getCurrentDevice()
+
+
+
     }
     function getSportByMessenger() {
         if (document.getElementById("messenger")) {
@@ -681,6 +688,31 @@
         let valorCookie = document.cookie.replace(regex, "$1");
         return decodeURIComponent(valorCookie);
     }
+
+
+
+
+    function getCookieMZ(name) {
+        const match = document.cookie.match(
+            new RegExp('(^|;\\s*)' + name + '=([^;]*)')
+        );
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+
+    function getCurrentDevice() {
+        const forceDesktop = getCookieMZ("force-desktop");
+        const forceMobile = getCookieMZ("force-mobile");
+
+        if (forceDesktop) {
+            return "mobile";
+        }
+        if (forceMobile) {
+            return "computer";
+        }
+        return "computer";
+    }
+
+
     function createModalMenu() {
         if (GM_getValue("hpVis") === undefined) {
             GM_setValue("hpVis",true)
