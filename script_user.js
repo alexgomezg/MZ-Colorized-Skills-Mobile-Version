@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.52
+// @version      0.53
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -36,6 +36,15 @@
     btn.addEventListener("click", function () {
         colorizeSkills("none").then()
     });
+
+    let btn1 = document.createElement("button");
+    btn1.style.display = "none";
+    btn1.id = "stxc_colorize_skills_mobile_transfers";
+    document.body.appendChild(btn1);
+    btn1.addEventListener("click", function () {
+        colorizeSkillsOnMarket()
+    });
+
     let training_icon="data:image/gif;base64,R0lGODlhBgAKAJEDAJnMZpmZmQAAAP///yH5BAEAAAMALAAAAAAGAAoAAAIRXCRhApAMgoPtVXXS2Lz73xUAOw=="
     let test_image="data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs=";
     let test_image_hockey="data:image/gif;base64,R0lGODlhDAAKANUkAOXq//8pKunt//ZTVPz19dXZ+tzk/+NAV+bl+Ojs//4wMeWkreXp/f4tLvRMT+Dm/+Xr/7lra/4vMepKSv7///ZRUvz8/tmHhs/Z/+xKSfVeYNCJkfhFRPUxOuBUZvRsb9ri//39//hDQv8oKf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAMAAoAAAZCQBLpMhqJMgiLkEQoOkeDwnLzdIowwuoTlNUWDRSSF/oIkUQBZ6BRAWiEkIlopPgsEhzPMgIQCBgOEiNLQh1PB4RBADs="
@@ -161,25 +170,27 @@
 
             });
             let player_h2 = p.querySelectorAll("span.player_name")
-            let player_id = p.querySelector("span.player_id_span").innerHTML
-            if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
-                if( window.stxc_device_mobile==="mobile"){
-                    let h2 = p.querySelectorAll("h2.subheader.clearfix")
-                    let as = h2[0].querySelectorAll("span.floatRight")
-                    let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
-                    as[0].insertAdjacentHTML('afterend',txt)
-                }else{
-                    let as = player_h2[0].querySelectorAll("a.subheader")
-                    let newSpan = document.createElement('span');
-                    newSpan.className="stxc_scout"
-                    newSpan.style.whiteSpace = "nowrap";
-                    newSpan.style.fontSize="100%"
-                    newSpan.style.fontWeight="normal"
-                    newSpan.innerHTML = ' '+hp_text
-                    newSpan.id='stxc_id_'+player_id
-                    player_h2[0].insertAdjacentElement('afterend',newSpan);
-                }
+            let player_id = p.querySelector("span.player_id_span")?.innerHTML ?? null;
+            if(player_id!==null){
+                if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
+                    if( window.stxc_device_mobile==="mobile"){
+                        let h2 = p.querySelectorAll("h2.subheader.clearfix")
+                        let as = h2[0].querySelectorAll("span.floatRight")
+                        let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
+                        as[0].insertAdjacentHTML('afterend',txt)
+                    }else{
+                        let as = player_h2[0].querySelectorAll("a.subheader")
+                        let newSpan = document.createElement('span');
+                        newSpan.className="stxc_scout"
+                        newSpan.style.whiteSpace = "nowrap";
+                        newSpan.style.fontSize="100%"
+                        newSpan.style.fontWeight="normal"
+                        newSpan.innerHTML = ' '+hp_text
+                        newSpan.id='stxc_id_'+player_id
+                        player_h2[0].insertAdjacentElement('afterend',newSpan);
+                    }
 
+                }
             }
 
 
@@ -327,25 +338,27 @@
 
             });
             let player_h2 = p.querySelectorAll("span.player_name")
-            let player_id = p.querySelector("span.player_id_span").innerHTML
-            if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
-                if( window.stxc_device_mobile==="mobile"){
-                    let h2 = p.querySelectorAll("h2.subheader.clearfix")
-                    let as = h2[0].querySelectorAll("span.floatRight")
-                    let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
-                    as[0].insertAdjacentHTML('afterend',txt)
-                }else{
-                    let as = player_h2[0].querySelectorAll("a.subheader")
-                    let newSpan = document.createElement('span');
-                    newSpan.className="stxc_scout"
-                    newSpan.style.whiteSpace = "nowrap";
-                    newSpan.style.fontSize="100%"
-                    newSpan.style.fontWeight="normal"
-                    newSpan.innerHTML = ' '+hp_text
-                    newSpan.id='stxc_id_'+player_id
-                    player_h2[0].insertAdjacentElement('afterend',newSpan);
-                }
+            let player_id = p.querySelector("span.player_id_span")?.innerHTML ?? null;
+            if(player_id!==null){
+                if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
+                    if( window.stxc_device_mobile==="mobile"){
+                        let h2 = p.querySelectorAll("h2.subheader.clearfix")
+                        let as = h2[0].querySelectorAll("span.floatRight")
+                        let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
+                        as[0].insertAdjacentHTML('afterend',txt)
+                    }else{
+                        let as = player_h2[0].querySelectorAll("a.subheader")
+                        let newSpan = document.createElement('span');
+                        newSpan.className="stxc_scout"
+                        newSpan.style.whiteSpace = "nowrap";
+                        newSpan.style.fontSize="100%"
+                        newSpan.style.fontWeight="normal"
+                        newSpan.innerHTML = ' '+hp_text
+                        newSpan.id='stxc_id_'+player_id
+                        player_h2[0].insertAdjacentElement('afterend',newSpan);
+                    }
 
+                }
             }
         }
 
@@ -688,17 +701,12 @@
         let valorCookie = document.cookie.replace(regex, "$1");
         return decodeURIComponent(valorCookie);
     }
-
-
-
-
     function getCookieMZ(name) {
         const match = document.cookie.match(
             new RegExp('(^|;\\s*)' + name + '=([^;]*)')
         );
         return match ? decodeURIComponent(match[2]) : null;
     }
-
     function getCurrentDevice() {
         const forceDesktop = getCookieMZ("force-desktop");
         const forceMobile = getCookieMZ("force-mobile");
@@ -711,8 +719,6 @@
         }
         return "computer";
     }
-
-
     function createModalMenu() {
         if (GM_getValue("hpVis") === undefined) {
             GM_setValue("hpVis",true)
