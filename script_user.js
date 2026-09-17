@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.55
+// @version      0.56
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -517,7 +517,7 @@
     }
 //FETCH FUNCTIONS
     async function fetchPlayerTableSkills(player_id) {
-        let link = "https://www.managerzone.com/?p=players&pid=" + player_id
+        let link = "https://www.managerzone.com/?p=transfer&sub=players&u=" + player_id
         return new Promise((resolve, reject) => {
                 if (player_maxs_map.has(player_id)) {
                     resolve(player_maxs_map.get(player_id));
@@ -546,9 +546,9 @@
                         }
                         let maxs = []
                         let divIndex=0;
-                        let classDiv=".player_skills.player_skills_responsive"
+                        let classDiv=".player_skills.player_skills_transfer"
                         if(window.stxc_device_mobile==="mobile"){
-                            classDiv=".player_skills.player_skills_responsive"
+                            classDiv=".player_skills.player_skills_transfer"
                         }
                         let div = player_container.querySelectorAll(classDiv)
 
@@ -577,9 +577,9 @@
                         GM_setValue("players_maxs_" + window.sport, JSON.stringify([...player_maxs_map]));
                         resolve(obj)
                     })
-                 .catch(error => {
-                     reject(new Error("Error loading: " + link + " | " + error));
-                 });
+                    .catch(error => {
+                        reject(new Error("Error loading: " + link + " | " + error));
+                    });
 
             }
         );
