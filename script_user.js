@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.54
+// @version      0.55
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -243,9 +243,10 @@
             let divIndex=0;
             if(window.stxc_device_mobile==="mobile"){
                 classDiv=".player_skills.player_skills_responsive"
-                divIndex=0;
+                divIndex=1;
             }
             let div=p.querySelectorAll(classDiv);
+
             let skill_vals=[]
             if (div.length>0){
                 skill_vals= div[divIndex].querySelectorAll(".skillval");
@@ -278,12 +279,12 @@
             let contIndexSkill=0;
             skill_vals= p.querySelectorAll(".skillval");
             skill_vals.forEach(skill => {
-
                 let balls_td = skill.previousElementSibling;
                 let divContainer = balls_td.querySelector('div#container');
                 let skillValue = skill.querySelectorAll("span")
                 let valor = parseInt(skillValue[0].innerHTML, 10);
                 let dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
+
                 for (let i = 0; i < valor; i++) {
                     if(type==="shortlist"){
                         if (player_maxs.maxs[contIndexSkill]==="maxed") {
@@ -300,6 +301,17 @@
                     }
                 }
                 contIndexSkill++;
+
+                if((window.sport=="hockey")&&(contIndexSkill==11)){
+                    contIndexSkill=0;
+                }
+
+                if((window.sport=="soccer")&&(contIndexSkill==13)){
+                    contIndexSkill=0;
+                }
+
+
+
                 if(divContainer.innerHTML.includes("blevel")){
                     dataToInsert +='<img alt="" src="'+training_icon+'"/>'
                 }
@@ -565,7 +577,7 @@
                         GM_setValue("players_maxs_" + window.sport, JSON.stringify([...player_maxs_map]));
                         resolve(obj)
                     })
-                .catch(error => {
+                 .catch(error => {
                      reject(new Error("Error loading: " + link + " | " + error));
                  });
 
