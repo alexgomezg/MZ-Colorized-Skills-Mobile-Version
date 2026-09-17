@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.53
+// @version      0.54
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -97,7 +97,6 @@
 
 //Colorize on market
     async function colorizeSkillsOnMarket(){
-        setDeviceFormat()
         let players = document.querySelectorAll(".playerContainer");
         players.forEach(p => {
             let scout = p.querySelectorAll(".scout_report_row.box_dark");
@@ -201,7 +200,6 @@
     }
 //Colorize other pages
     async function colorizeSkills(type_= "none"){
-        setDeviceFormat()
         let params = new URLSearchParams(window.location.search);
         let type="players"
         if(type_==="none"){
@@ -507,7 +505,7 @@
     }
 //FETCH FUNCTIONS
     async function fetchPlayerTableSkills(player_id) {
-        let link = "https://www.managerzone.com/?p=transfer&sub=players&u=" + player_id
+        let link = "https://www.managerzone.com/?p=players&pid=" + player_id
         return new Promise((resolve, reject) => {
                 if (player_maxs_map.has(player_id)) {
                     resolve(player_maxs_map.get(player_id));
@@ -535,12 +533,20 @@
                             return;
                         }
                         let maxs = []
-                        let classDiv=".player_skills.player_skills_transfer"
+                        let divIndex=0;
+                        let classDiv=".player_skills.player_skills_responsive"
                         if(window.stxc_device_mobile==="mobile"){
                             classDiv=".player_skills.player_skills_responsive"
                         }
-                        let div = player_container.querySelector(classDiv)
-                        let skill_vals = div.querySelectorAll(".skillval");
+                        let div = player_container.querySelectorAll(classDiv)
+
+
+                        let skill_vals=[]
+                        if (div.length>0){
+                            skill_vals= div[divIndex].querySelectorAll(".skillval");
+                        }
+
+
                         let cont = 0;
                         skill_vals.forEach(skill => {
                             let skillValue = skill.querySelectorAll("span")
@@ -559,9 +565,9 @@
                         GM_setValue("players_maxs_" + window.sport, JSON.stringify([...player_maxs_map]));
                         resolve(obj)
                     })
-                    .catch(error => {
-                        reject(new Error("Error loading: " + link + " | " + error));
-                    });
+                .catch(error => {
+                     reject(new Error("Error loading: " + link + " | " + error));
+                 });
 
             }
         );
@@ -638,21 +644,23 @@
 
     }
     function setDeviceFormat(){
-        if(!document.getElementById("deviceFormatStx")){
-            let script = document.createElement('script');
-            script.textContent = `
-    let newElemenDevicestxc_mobile = document.createElement("input");
-    newElemenDevicestxc_mobile.id= "deviceFormatstxc_mobile";
-    newElemenDevicestxc_mobile.type = "hidden";
-    newElemenDevicestxc_mobile.value=window.device;
-    document.body.appendChild(newElemenDevicestxc_mobile);
+        /* if(!document.getElementById("deviceFormatstxc_mobile_sk")){
+             let script = document.createElement('script');
+             script.textContent = `
+     let newElemenDevicestxc_mobile_sk = document.createElement("input");
+     newElemenDevicestxc_mobile_sk.id= "deviceFormatstxc_mobile_sk";
+     newElemenDevicestxc_mobile_sk.type = "hidden";
+     newElemenDevicestxc_mobile_sk.value=window.device;
+     if(!document.getElementById("deviceFormatstxc_mobile_sk"){
+     document.body.appendChild(newElemenDevicestxc_mobile_sk);
+     }
 
-`;
-            document.documentElement.appendChild(script);
-            script.remove();
-            window.stxc_device_mobile=document.getElementById("deviceFormatstxc_mobile").value
-        }
-
+ `;
+             document.documentElement.appendChild(script);
+             script.remove();
+             window.stxc_device_mobile=document.getElementById("deviceFormatstxc_mobile_sk").value
+         }
+ */
 
         window.stxc_device_mobile=getCurrentDevice()
 
