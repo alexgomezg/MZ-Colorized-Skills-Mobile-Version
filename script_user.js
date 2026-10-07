@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.60
+// @version      0.61
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -555,7 +555,7 @@
                             <button id="copyHome" class="btn-save"
 
                             style="position: fixed;
-                            top: 50%; right: 10px;
+                            top: 50%; right: 5em;
                             transform: translateY(-50%);
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
@@ -573,7 +573,7 @@
                             <button id="copyAway" class="btn-save"
 
                             style="position: fixed;
-                            top: 60%; right: 10px;
+                            top: 60%; right: 5em;
                             transform: translateY(-50%);
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
@@ -805,7 +805,7 @@
         window.stxc_device_mobile=getCurrentDevice()
 
 
-console.log(window.stxc_device_mobile)
+alert(window.stxc_device_mobile)
     }
     function getSportByMessenger() {
         if (document.getElementById("messenger")) {
