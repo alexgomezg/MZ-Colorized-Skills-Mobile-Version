@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.63
+// @version      0.64
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -619,12 +619,15 @@
 
                             let elemento = document.getElementById('copyHome');
                             elemento.addEventListener('click', function () {
-                                copyXML(1636536511, true);
+
+                                const mid = new URLSearchParams(location.search).get('mid');
+                                copyXML(mid, true);
                             });
 
                             elemento = document.getElementById('copyAway');
                             elemento.addEventListener('click', function () {
-                                copyXML(1636536511, false);
+                                const mid = new URLSearchParams(location.search).get('mid');
+                                copyXML(mid, false);
                             });
 
                             clearInterval(intervalId);
@@ -1172,7 +1175,8 @@ cursor: default;
     }
     async function getMaxAsync() {
         const res = await fetch("/?p=training&sport=soccer", {
-            credentials: "same-origin"
+            method: "GET",
+            credentials: "include"
         });
         if (!res.ok) throw new Error("HTTP " + res.status);
 
@@ -1184,9 +1188,11 @@ cursor: default;
         return pmax;
     }
     async function copyXML(mid, localAway) {
+        alert("aaa")
         const pmax = await getMaxAsync()
         let tmpXML = Stats2XML(mid, localAway,pmax);
         GM_setClipboard(tmpXML);
+        //navigator.clipboard.writeText(tmpXML);
         notifySnackBar("Correct", "Tactic copied to clipboard!");
     }
     function StatsToPos_X (i, IsLocal) {
