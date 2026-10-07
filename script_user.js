@@ -555,7 +555,7 @@
                             <button id="copyHome" class="btn-save"
 
                             style="position: fixed;
-                            top: 50%; right: 5em;
+                            top: 10%; right: 2em;
                             transform: translateY(-50%);
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
@@ -573,7 +573,7 @@
                             <button id="copyAway" class="btn-save"
 
                             style="position: fixed;
-                            top: 60%; right: 5em;
+                            top: 20%; right: 2em;
                             transform: translateY(-50%);
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
@@ -633,9 +633,6 @@
 
                     event.preventDefault();
                     startCapture(loader => {
-                        console.log("listo", loader)
-
-
                     });
 
 
@@ -800,7 +797,6 @@ if(!document.getElementById("deviceFormatstxc_mobile_sk")){
             window.stxc_device_mobile=document.getElementById("deviceFormatstxc_mobile_sk").value
         }
 
-        alert(window.stxc_device_mobile)
     }
 
 
@@ -1158,7 +1154,6 @@ cursor: default;
             if (window.matchLoader) {               // ya capturado
                 clearInterval(mlTimer);
                 captureMatchLoader = false;
-                console.log("matchLoader capturado", window.matchLoader);
                 if (cb) cb(window.matchLoader);
             }
         }, 200);
@@ -1186,7 +1181,6 @@ cursor: default;
         if (!result) throw new Error("playerMax no encontrado");
 
         let pmax = JSON.parse(result[1]);
-        console.log(pmax)
         return pmax;
     }
     async function copyXML(mid, localAway) {
