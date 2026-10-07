@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.59
+// @version      0.60
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -539,10 +539,6 @@
 
 
                 link.addEventListener("click", function (event) {
-
-                    alert("aaas")
-
-
                     let overlay = document.getElementById('game-overlay-close');
 
                     let intervalId = setInterval(() => {
@@ -809,7 +805,7 @@
         window.stxc_device_mobile=getCurrentDevice()
 
 
-
+console.log(window.stxc_device_mobile)
     }
     function getSportByMessenger() {
         if (document.getElementById("messenger")) {
