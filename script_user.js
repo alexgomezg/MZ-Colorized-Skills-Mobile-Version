@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.65
+// @version      0.66
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -91,7 +91,7 @@
         waitToDOM(colorizeSkills, ".buttonClassRight", 0,7000)
     }
     if (params.get('p') === 'match') {
-        waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
+        //waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
     }
 
     waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
@@ -619,14 +619,12 @@
 
                             let elemento = document.getElementById('copyHome');
                             elemento.addEventListener('click', function () {
-                                alert("zzzz1")
                                 const mid = new URLSearchParams(location.search).get('mid');
                                 copyXML(mid, true);
                             });
 
                             elemento = document.getElementById('copyAway');
                             elemento.addEventListener('click', function () {
-                                alert("zzzz2")
                                 const mid = new URLSearchParams(location.search).get('mid');
                                 copyXML(mid, false);
                             });
@@ -1189,7 +1187,6 @@ cursor: default;
         return pmax;
     }
     async function copyXML(mid, localAway) {
-        alert("aaa")
         const pmax = await getMaxAsync()
         let tmpXML = Stats2XML(mid, localAway,pmax);
         GM_setClipboard(tmpXML);
@@ -1241,7 +1238,6 @@ cursor: default;
             }
         }
         tmpXML += "</SoccerTactics>\r\n";
-        console.log(tmpXML)
         return tmpXML;
     }
     function waitToDOM(function_to_execute, classToSearch, elementIndex,miliseconds) {
