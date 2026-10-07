@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.56
+// @version      0.57
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -11,6 +11,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_setClipboard
 // @license      GNU
 // @downloadURL https://update.greasyfork.org/scripts/536714/MZ%20Colorized%20Skills%20%28Mobile%20Version%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/536714/MZ%20Colorized%20Skills%20%28Mobile%20Version%29.meta.js
@@ -21,6 +22,8 @@
 
 (function() {
     'use strict';
+    let captureMatchLoader = false;
+    let mlTimer = null;
     let skillIndex
     let defaults = {
         soccer_ball_width: 12, soccer_ball_height: 10,
@@ -87,6 +90,10 @@
     if (params.get('p') === 'tactics') {
         waitToDOM(colorizeSkills, ".buttonClassRight", 0,7000)
     }
+    if (params.get('p') === 'match') {
+        waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
+    }
+
     waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
     document.addEventListener('click', function(event) {
         const link = event.target.closest('.player_link');
@@ -170,12 +177,14 @@
             });
             let player_h2 = p.querySelectorAll("span.player_name")
             let player_id = p.querySelector("span.player_id_span")?.innerHTML ?? null;
+            window.stxc_device_mobile="mobile"
             if(player_id!==null){
                 if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
                     if( window.stxc_device_mobile==="mobile"){
                         let h2 = p.querySelectorAll("h2.subheader.clearfix")
                         let as = h2[0].querySelectorAll("span.floatRight")
-                        let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
+                        //let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
+                        let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="min-width: 0; flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: pre;"> '+hp_text+'</span>'
                         as[0].insertAdjacentHTML('afterend',txt)
                     }else{
                         let as = player_h2[0].querySelectorAll("a.subheader")
@@ -515,6 +524,84 @@
 
         }*/
     }
+//Copy XML
+    function insertCopyXMLEventListener(){
+        let links = document.querySelectorAll("a.matchIcon.large.shadow");
+        links.forEach(function (link) {
+            let icon = link.querySelector("i");
+            if (icon && icon.textContent.trim() === "2D") {
+
+
+
+
+
+
+
+
+                link.addEventListener("click", function (event) {
+
+
+                    let overlay = document.getElementById('game-overlay-close');
+
+                    let intervalId = setInterval(() => {
+                        let style = window.getComputedStyle(overlay);
+                        if (style.display === 'none') {
+
+
+                            let div = document.getElementById("gameContent");
+                            let button = `</br>
+                            </br>
+
+                            <button id="copyHome" class="btn-save" style="border: 2px solid white; color:white; background-color:#e4c800; font-family: \'Roboto\'; font-weight:bold;font-size:revert; width:11em; padding: 2px 2px;">
+
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+  <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+</svg>
+
+                           Copy Local Tactic</button>
+
+
+
+                            <button id="copyAway" class="btn-save" style="border: 2px solid white; color:white; background-color:#e4c800; font-family: \'Roboto\'; font-weight:bold;font-size:revert; width:11em; padding: 2px 2px;">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-airplane-fill" viewBox="0 0 16 16">
+  <path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849"/>
+</svg>
+
+                            Copy Away Tactic</button>
+
+                            `
+
+                            div.insertAdjacentHTML('beforeend', button);
+
+
+                            let elemento = document.getElementById('copyHome');
+                            elemento.addEventListener('click', function () {
+                                copyXML(1636536511, true);
+                            });
+
+                            elemento = document.getElementById('copyAway');
+                            elemento.addEventListener('click', function () {
+                                copyXML(1636536511, false);
+                            });
+
+                            clearInterval(intervalId);
+                        }
+                    }, 750); //
+
+                    event.preventDefault();
+                    startCapture(loader => {
+                        console.log("listo", loader)
+
+
+                    });
+
+
+                });
+
+            }
+        });
+    }
 //FETCH FUNCTIONS
     async function fetchPlayerTableSkills(player_id) {
         let link = "https://www.managerzone.com/?p=transfer&sub=players&u=" + player_id
@@ -636,7 +723,6 @@
                 .catch(error => reject(error));
         });
     }
-
 ///UTILS////
     function setSport(){
 
@@ -743,8 +829,61 @@
         if (GM_getValue("hpVis") === undefined) {
             GM_setValue("hpVis",true)
         }
+
+
+        const snackbar = document.createElement('div');
+        snackbar.id = 'snackbar_stx';
+        snackbar.style.cssText = 'position:fixed;bottom:60px;right:12px;z-index:99999;';
+        document.body.appendChild(snackbar);
+
         const style = document.createElement('style');
         style.textContent = `
+
+#snackbar_stx {
+  visibility: hidden;
+  position: fixed;
+  align-items: center;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 350px;
+  background-color: #323232;
+  color: #ffffffb3;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  z-index: 1;
+  bottom: 30px;
+  font-size: 17px;
+  border-radius: 5px;
+  box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
+}
+
+#snackbar_stx.showSnackBar_stx {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 8s forwards;
+  animation: fadein 0.5s, fadeout 0.5s 8s forwards;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
 
     .stxc_legend {
 z-index:300;
@@ -954,6 +1093,116 @@ cursor: default;
             window.location.reload();
         });
     }
+    function tryInstallHook() {
+        if (window.__mlHookInstalled) return true;
+        if (typeof MyGame === 'undefined' || !MyGame.prototype.Load010SetupMainSceneInstance) return false;
+
+        const original = MyGame.prototype.Load010SetupMainSceneInstance;
+        MyGame.prototype.Load010SetupMainSceneInstance = function () {
+            if (captureMatchLoader) {
+                window.matchLoader = arguments[0];
+                captureMatchLoader = false;
+            }
+            return original.apply(this, arguments);
+        };
+        window.__mlHookInstalled = true;
+        return true;
+    }
+    function startCapture(cb) {
+        clearInterval(mlTimer);
+        window.matchLoader = undefined;
+        captureMatchLoader = true;
+
+        mlTimer = setInterval(() => {
+            tryInstallHook();                       // reintenta hasta que MyGame exista
+            if (window.matchLoader) {               // ya capturado
+                clearInterval(mlTimer);
+                captureMatchLoader = false;
+                console.log("matchLoader capturado", window.matchLoader);
+                if (cb) cb(window.matchLoader);
+            }
+        }, 200);
+    }
+    function notifySnackBar(status, msg) {
+
+        let x = document.getElementById("snackbar_stx");
+        let txt = "<img alt='' src='https://statsxente.com/MZ1/View/Images/main_icon.png' width='25px' height='25px'> <span style='color:#f44336; font-size: 17px;'>[Stats Xente Script] </span>"
+        txt += msg + "</br>"
+        x.innerHTML = txt;
+        x.className = "showSnackBar_stx";
+        setTimeout(function () { x.className = x.className.replace("showSnackBar_stx", ""); }, 4000);
+        let clase = "loader-" + window.sport
+        let elementos = document.querySelectorAll('.' + clase);
+        elementos.forEach(elemento => elemento.remove());
+    }
+    async function getMaxAsync() {
+        const res = await fetch("/?p=training&sport=soccer", {
+            credentials: "same-origin"
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const data = await res.text();
+        const result = data.match(/trainingField.players\s*=\s*({.+})/);
+        if (!result) throw new Error("playerMax no encontrado");
+
+        let pmax = JSON.parse(result[1]);
+        console.log(pmax)
+        return pmax;
+    }
+    async function copyXML(mid, localAway) {
+        const pmax = await getMaxAsync()
+        let tmpXML = Stats2XML(mid, localAway,pmax);
+        GM_setClipboard(tmpXML);
+        notifySnackBar("Correct", "Tactic copied to clipboard!");
+    }
+    function StatsToPos_X (i, IsLocal) {
+        let ret = IsLocal ? Math.round(-.255800462 * i + 199.8228530689) : Math.round(.2555000556 * i + 8.3741302936);
+        return ret;
+    }
+    function StatsToPos_Y(i, IsLocal) {
+        let ret = IsLocal ? Math.round(-.3073207154 * i + 315.9278777381) : Math.round(.3070644902 * i + 9.2794889414);
+        return ret;
+    }
+    function Stats2XML(mid, localAway, players) {
+        let data = $.parseXML(window.matchLoader.matchXml.xmlText)
+        if (!data) {
+            return "";
+        }
+        let teams = data.documentElement.getElementsByTagName("Team");
+        let team = localAway ? teams[0] : teams[1];
+
+        let pidArr = new Array();
+        if (players) {
+            for (let pid in players) {
+                pidArr.push(pid);
+            }
+        }
+        while (pidArr.length < 11) {
+            pidArr.push(0);
+        }
+
+        let tmpXML = "<?xml version=\"1.0\" ?>" + "\r\n<SoccerTactics>\r\n\t<Team tactics=" + "\"" + team.getAttribute("tactic") + "\" playstyle=\"" + team.getAttribute("playstyle") + "\" aggression=\"" + team.getAttribute("aggression") + "\" />\r\n"
+            + "\t<Pos pos=\"goalie\" pid=\"" + pidArr.shift() + "\" x=\"103\" y=\"315\" x1=\"103\" y1=\"315\" x2=\"103\" y2=\"315\" pt=\"15\" fk=\"15\" />\r\n";
+
+        let players_xml = data.documentElement.getElementsByTagName('Player');
+        for (var i = 0; i < players_xml.length; i++) {
+            let pl = players_xml[i];
+            let origin = pl.getAttribute('origin');
+            let teamId = pl.getAttribute("teamId");
+            if (origin != "" && origin != "375,0" && origin != "375,1000") {
+                let arr = origin.split(",");
+                if (team.getAttribute("id") == teamId) {
+                    let x = StatsToPos_X(arr[0], localAway);
+                    let y = StatsToPos_Y(arr[1], localAway);
+                    tmpXML += "\t<Pos pos=\"normal\" pid=\"" + pidArr.shift() + "\" x=\"" + x + "\" y=\"" + y + "\" x1=\"" + x + "\" y1=\"" + y + "\" x2=\"" + x + "\" y2=\"" + y + "\" pt=\"1\" fk=\"1\" />\r\n";
+                }
+
+            }
+        }
+        tmpXML += "</SoccerTactics>\r\n";
+        console.log(tmpXML)
+        return tmpXML;
+    }
     function waitToDOM(function_to_execute, classToSearch, elementIndex,miliseconds) {
         let interval = setInterval(function () {
             let elements = document.querySelectorAll(classToSearch);
@@ -976,4 +1225,18 @@ cursor: default;
             document.getElementById("legendDivStxc").style.bottom="67%"
         }
     }, 2000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 })();
