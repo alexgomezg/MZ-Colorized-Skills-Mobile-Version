@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.61
+// @version      0.62
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -784,29 +784,27 @@
 
     }
     function setDeviceFormat(){
-        /* if(!document.getElementById("deviceFormatstxc_mobile_sk")){
-             let script = document.createElement('script');
-             script.textContent = `
-     let newElemenDevicestxc_mobile_sk = document.createElement("input");
-     newElemenDevicestxc_mobile_sk.id= "deviceFormatstxc_mobile_sk";
-     newElemenDevicestxc_mobile_sk.type = "hidden";
-     newElemenDevicestxc_mobile_sk.value=window.device;
-     if(!document.getElementById("deviceFormatstxc_mobile_sk"){
-     document.body.appendChild(newElemenDevicestxc_mobile_sk);
-     }
+        if(!document.getElementById("deviceFormatstxc_mobile_sk")){
+            let script = document.createElement('script');
+            script.textContent = `
+let newElemenDevicestxc_mobile_sk = document.createElement("input");
+newElemenDevicestxc_mobile_sk.id= "deviceFormatstxc_mobile_sk";
+newElemenDevicestxc_mobile_sk.type = "hidden";
+newElemenDevicestxc_mobile_sk.value=window.device;
+if(!document.getElementById("deviceFormatstxc_mobile_sk")){
+    document.body.appendChild(newElemenDevicestxc_mobile_sk);
+}
+`;
+            document.documentElement.appendChild(script);
+            script.remove();
+            window.stxc_device_mobile=document.getElementById("deviceFormatstxc_mobile_sk").value
+        }
 
- `;
-             document.documentElement.appendChild(script);
-             script.remove();
-             window.stxc_device_mobile=document.getElementById("deviceFormatstxc_mobile_sk").value
-         }
- */
-
-        window.stxc_device_mobile=getCurrentDevice()
-
-
-alert(window.stxc_device_mobile)
+        alert(window.stxc_device_mobile)
     }
+
+
+
     function getSportByMessenger() {
         if (document.getElementById("messenger")) {
 
