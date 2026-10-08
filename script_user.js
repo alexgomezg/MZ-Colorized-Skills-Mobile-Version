@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.72
+// @version      0.73
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -1186,23 +1186,26 @@ cursor: default;
             credentials: "include"
         });
         if (!res.ok) throw new Error("HTTP " + res.status);
-
         const data = await res.text();
         const result = data.match(/trainingField.players\s*=\s*({.+})/);
         if (!result) throw new Error("playerMax no encontrado");
-
         let pmax = JSON.parse(result[1]);
-        alert(pmax)
         return pmax;
     }
     async function copyXML(mid, localAway) {
-        alert("aaa")
-        const pmax = await getMaxAsync()
-        alert("salgo de pmax")
-        let tmpXML = Stats2XML(mid, localAway,pmax);
-        GM_setClipboard(tmpXML);
-        alert(tmpXML)
-        //navigator.clipboard.writeText(tmpXML);
+        const blobPromise = (async () => {
+            const pmax = await getMaxAsync();
+            const tmpXML = Stats2XML(mid, localAway, pmax);
+            return new Blob([tmpXML], { type: "text/plain" });
+        })();
+
+        try {
+            await navigator.clipboard.write([new ClipboardItem({ "text/plain": blobPromise })]);
+        } catch (e) {
+            // Fallback (PC / navegadores sin ClipboardItem con promesa)
+            const xml = await (await blobPromise).text();
+            GM_setClipboard(xml);
+        }
         notifySnackBar("Correct", "Tactic copied to clipboard!");
     }
     function StatsToPos_X (i, IsLocal) {
