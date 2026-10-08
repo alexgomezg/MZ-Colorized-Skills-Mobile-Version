@@ -1,17 +1,19 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.71
+// @version      0.72
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
 // @match        https://www.managerzone.com/*
+// @run-at       document-start
 // @connect      managerzone.com
 // @icon         https://statsxente.com/MZ1/View/Images/main_icon.png
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_setClipboard
+// @grant        unsafeWindow
 // @license      GNU
 // @require      https://code.jquery.com/jquery-3.7.1.js
 // @downloadURL https://update.greasyfork.org/scripts/536714/MZ%20Colorized%20Skills%20%28Mobile%20Version%29.user.js
@@ -549,7 +551,7 @@
 
 
                             let button=""
-                           // window.stxc_device_mobile="mobile"
+                            // window.stxc_device_mobile="mobile"
                             if(window.stxc_device_mobile==="mobile"){
                                 let ultimo = [...document.querySelectorAll('.matchIcon.large.shadow.inverted')].at(-1);
                                 console.log(ultimo)
@@ -1132,32 +1134,37 @@ cursor: default;
             window.location.reload();
         });
     }
-    function tryInstallHook() {
-        if (window.__mlHookInstalled) return true;
-        if (typeof MyGame === 'undefined' || !MyGame.prototype.Load010SetupMainSceneInstance) return false;
+    const W = (typeof unsafeWindow !== 'undefined' && unsafeWindow) ? unsafeWindow : window;
 
-        const original = MyGame.prototype.Load010SetupMainSceneInstance;
-        MyGame.prototype.Load010SetupMainSceneInstance = function () {
+    function tryInstallHook() {
+        if (W.__mlHookInstalled) return true;
+        if (typeof W.MyGame === 'undefined' || !W.MyGame.prototype.Load010SetupMainSceneInstance) return false;
+
+        const original = W.MyGame.prototype.Load010SetupMainSceneInstance;
+        W.MyGame.prototype.Load010SetupMainSceneInstance = function () {
             if (captureMatchLoader) {
-                window.matchLoader = arguments[0];
+                W.matchLoader = arguments[0];
                 captureMatchLoader = false;
             }
             return original.apply(this, arguments);
         };
-        window.__mlHookInstalled = true;
+        W.__mlHookInstalled = true;
         return true;
     }
+
+
+
     function startCapture(cb) {
         clearInterval(mlTimer);
-        window.matchLoader = undefined;
+        W.matchLoader = undefined;
         captureMatchLoader = true;
 
         mlTimer = setInterval(() => {
             tryInstallHook();                       // reintenta hasta que MyGame exista
-            if (window.matchLoader) {               // ya capturado
+            if (W.matchLoader) {                    // ya capturado
                 clearInterval(mlTimer);
                 captureMatchLoader = false;
-                if (cb) cb(window.matchLoader);
+                if (cb) cb(W.matchLoader);
             }
         }, 200);
     }
@@ -1207,14 +1214,20 @@ cursor: default;
         return ret;
     }
     function Stats2XML(mid, localAway, players) {
-        alert("aqui")
-        let data = $.parseXML(window.matchLoader.matchXml.xmlText)
-        alert("aqui1")
-        alert(window.matchLoader.matchXml.xmlText)
+        const W = (typeof unsafeWindow !== 'undefined' && unsafeWindow) ? unsafeWindow : window;
+        const jq = W.jQuery || W.$ || (typeof $ !== 'undefined' ? $ : null);
+        let data;
+        try {
+            data = jq.parseXML(W.matchLoader.matchXml.xmlText);
+        } catch (e) {
+            alert("Stats2XML error: " + e.message +
+                " | ml: " + typeof W.matchLoader +
+                " | jq: " + typeof jq);
+            return "";
+        }
         if (!data) {
             return "";
         }
-        alert("aqui2")
         let teams = data.documentElement.getElementsByTagName("Team");
         let team = localAway ? teams[0] : teams[1];
 
@@ -1271,18 +1284,6 @@ cursor: default;
             document.getElementById("legendDivStxc").style.bottom="67%"
         }
     }, 2000);
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 })();
