@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.68
+// @version      0.69
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -1184,6 +1184,7 @@ cursor: default;
         if (!result) throw new Error("playerMax no encontrado");
 
         let pmax = JSON.parse(result[1]);
+        alert(pmax)
         return pmax;
     }
     async function copyXML(mid, localAway) {
@@ -1205,6 +1206,7 @@ cursor: default;
     }
     function Stats2XML(mid, localAway, players) {
         let data = $.parseXML(window.matchLoader.matchXml.xmlText)
+        alert(data)
         if (!data) {
             return "";
         }
