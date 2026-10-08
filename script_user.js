@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.66
+// @version      0.67
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -91,7 +91,7 @@
         waitToDOM(colorizeSkills, ".buttonClassRight", 0,7000)
     }
     if (params.get('p') === 'match') {
-        //waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
+        waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
     }
 
     waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
@@ -546,17 +546,18 @@
                         if (style.display === 'none') {
 
 
-                            let div = document.getElementById("gameContent");
-                            let button=""
-                            //window.stxc_device_mobile="mobile"
-                            if(window.stxc_device_mobile==="mobile"){
-                                button = `
 
+                            let button=""
+                           // window.stxc_device_mobile="mobile"
+                            if(window.stxc_device_mobile==="mobile"){
+                                let ultimo = [...document.querySelectorAll('.matchIcon.large.shadow.inverted')].at(-1);
+                                console.log(ultimo)
+                                button = `
+</br>
+</br>
                             <button id="copyHome" class="btn-save"
 
-                            style="position: fixed;
-                            top: 10%; right: 2em;
-                            transform: translateY(-50%);
+                            style="
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
                             font-family: 'Roboto'; font-weight:bold;font-size:revert;
@@ -572,9 +573,7 @@
 
                             <button id="copyAway" class="btn-save"
 
-                            style="position: fixed;
-                            top: 20%; right: 2em;
-                            transform: translateY(-50%);
+                            style="
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
                             font-family: 'Roboto'; font-weight:bold;font-size:revert;
@@ -587,8 +586,9 @@
                             Copy</button>
 
                             `
+                                ultimo.insertAdjacentHTML('afterend', button);
                             }else{
-
+                                let div = document.getElementById("gameContent");
                                 button = `</br>
                             </br>
 
@@ -611,10 +611,10 @@
                             Copy Away Tactic</button>
 
                             `
-
+                                div.insertAdjacentHTML('beforeend', button);
                             }
 
-                            div.insertAdjacentHTML('beforeend', button);
+
 
 
                             let elemento = document.getElementById('copyHome');
