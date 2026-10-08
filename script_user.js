@@ -1,21 +1,18 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.74
+// @version      0.75
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
 // @match        https://www.managerzone.com/*
-// @run-at       document-start
 // @connect      managerzone.com
 // @icon         https://statsxente.com/MZ1/View/Images/main_icon.png
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_setClipboard
-// @grant        unsafeWindow
 // @license      GNU
-// @require      https://code.jquery.com/jquery-3.7.1.js
 // @downloadURL https://update.greasyfork.org/scripts/536714/MZ%20Colorized%20Skills%20%28Mobile%20Version%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/536714/MZ%20Colorized%20Skills%20%28Mobile%20Version%29.meta.js
 // ==/UserScript==
@@ -94,7 +91,7 @@
         waitToDOM(colorizeSkills, ".buttonClassRight", 0,7000)
     }
     if (params.get('p') === 'match') {
-        waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
+        //waitToDOM(insertCopyXMLEventListener,".scoreboard_container",0,7000)
     }
 
     waitToDOM(colorizeSkills, ".playerContainer", 0,7000)
@@ -229,11 +226,9 @@
             }
 
             if(params.get('p')==="tactics"){
-                setTimeout(() => {
-                    let target = document.querySelector(".player-info-content");
-                    colorizeSkillsOnTactics().then()
-                    return;
-                }, 1000);
+                let target = document.querySelector(".player-info-content");
+                colorizeSkillsOnTactics().then()
+                return;
             }
         }else{
             type=type_
@@ -316,11 +311,11 @@
                 }
                 contIndexSkill++;
 
-                if((window.sport==="hockey")&&(contIndexSkill===11)){
+                if((window.sport=="hockey")&&(contIndexSkill==11)){
                     contIndexSkill=0;
                 }
 
-                if((window.sport==="soccer")&&(contIndexSkill===13)){
+                if((window.sport=="soccer")&&(contIndexSkill==13)){
                     contIndexSkill=0;
                 }
 
@@ -331,7 +326,7 @@
                 }
 
                 let fila = skill.closest('tr');
-                let skill_name_td = fila.querySelector('.skill_name span').closest('td');
+                let skill_name_td = fila.querySelector('.skill_name span').closest('td');;
                 if(scout.length>0){
                     let spans=skill_name_td.querySelector("span")
                     let spans_name=spans.querySelector("span")
@@ -437,7 +432,97 @@
         colorizeSkills("players")
 
 
+        /*let player_maxs
+        let players = document.querySelectorAll(".playerContainer");
+        for (const p of players) {
+            let id=p.querySelector('span.player_id_span').textContent
+            let skill_vals= p.querySelectorAll(".skillval");
+            let scout = p.querySelectorAll(".scout_report_row.box_dark");
+            let hp_stars=0;
+            let lp_stars=0;
+            let sp_stars=0
+            if(scout.length>0){
+                let scout_divs = p.querySelectorAll(".scout_report_stars");
+                hp_stars = scout_divs[0].querySelectorAll("i").length;
+                lp_stars = scout_divs[1].querySelectorAll("i").length;
+                sp_stars = scout_divs[2].querySelectorAll("i").length;
+            }
+            let hp_skills=[]
+            let lp_skills=[]
+            let hp_text=""
+            let contIndexSkill=0;
+            skill_vals.forEach(skill => {
+                let balls_td = skill.previousElementSibling;
+                let divContainer = balls_td.querySelector('div#container');
+                let skillValue = skill.querySelectorAll("span")
+                let valor = parseInt(skillValue[0].innerHTML, 10);
+                let dataToInsert = '<div class="skill" style="white-space: nowrap; font-size:0;padding: 0 0 0 4px;">'
+                for (let i = 0; i < valor; i++) {
+                     if (skillValue[0].classList.contains('maxed')) {
+                        dataToInsert += maxed_imgs.get('maxed_'+window.sport)
+                    } else {
+                        dataToInsert += maxed_imgs.get('unmaxed_'+window.sport)
+                    }
+                }
+                contIndexSkill++;
+                if(divContainer.innerHTML.includes("blevel")){
+                    dataToInsert +='<img alt="" src="'+training_icon+'"/>'
+                }
+                let fila = skill.closest('tr');
+                let skill_name_td = fila.querySelector('.skill_name span').closest('td');;
+                if(scout.length>0){
+                    let spans=skill_name_td.querySelector("span")
+                    let spans_name=spans.querySelector("span")
+                    if(skill_name_td.querySelector("span.sup")){
 
+                        if(skill_name_td.querySelector("span.sup").textContent==="1"){
+                            skill_name_td.style.color=colors.get("skc_"+hp_stars)
+                            skill_name_td.style.fontWeight = "bold"
+                            hp_skills.push(spans_name.textContent)
+                        }
+
+                        if(skill_name_td.querySelector("span.sup").textContent==="2"){
+                            skill_name_td.style.color=colors.get("skc_"+lp_stars)
+                            lp_skills.push(spans_name.textContent)
+                        }
+                    }
+                }
+                if( window.stxc_device_mobile==="mobile"){
+                    fila.querySelector('.skill_name').style.marginRight="-3px"
+                    fila.querySelector('.skill_name').style.justifyContent="start";
+                }
+
+                if(hp_skills.length>0){
+                    hp_text="[H"+hp_stars+" "+hp_skills[0]+","+hp_skills[1]+"] "+"[L"+lp_stars+" "+lp_skills[0]+","+lp_skills[1]+"] S"+sp_stars
+                }
+                balls_td.querySelector("#container").innerHTML=dataToInsert
+
+            });
+
+                let player_h2 = p.querySelectorAll("span.player_name")
+            let player_id = p.querySelector("span.player_id_span").innerHTML
+            if((!document.getElementById('stxc_id_'+player_id))&&(GM_getValue("hpVis") )){
+                if( window.stxc_device_mobile==="mobile"){
+                    let h2 = p.querySelectorAll("h2.subheader.clearfix")
+                    let as = h2[0].querySelectorAll("span.floatRight")
+                    let txt='<span id="stxc_id_'+player_id+'" class="stxc_scout" style="overflow: hidden; text-overflow: ellipsis; font-weight: normal; font-size: 100%; white-space: nowrap;"> '+hp_text+'</span>'
+                    as[0].insertAdjacentHTML('afterend',txt)
+                }else{
+                    let as = player_h2[0].querySelectorAll("a.subheader")
+                    let newSpan = document.createElement('span');
+                    newSpan.className="stxc_scout"
+                    newSpan.style.whiteSpace = "nowrap";
+                    newSpan.style.fontSize="100%"
+                    newSpan.style.fontWeight="normal"
+                    newSpan.innerHTML = ' '+hp_text
+                    newSpan.id='stxc_id_'+player_id
+                    player_h2[0].insertAdjacentElement('afterend',newSpan);
+                }
+
+            }
+
+
+        }*/
     }
 //Copy XML
     function insertCopyXMLEventListener(){
@@ -461,18 +546,17 @@
                         if (style.display === 'none') {
 
 
-
+                            let div = document.getElementById("gameContent");
                             let button=""
-                            // window.stxc_device_mobile="mobile"
+                            //window.stxc_device_mobile="mobile"
                             if(window.stxc_device_mobile==="mobile"){
-                                let ultimo = [...document.querySelectorAll('.matchIcon.large.shadow.inverted')].at(-1);
-                                console.log(ultimo)
                                 button = `
-</br>
-</br>
+
                             <button id="copyHome" class="btn-save"
 
-                            style="
+                            style="position: fixed;
+                            top: 10%; right: 2em;
+                            transform: translateY(-50%);
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
                             font-family: 'Roboto'; font-weight:bold;font-size:revert;
@@ -488,7 +572,9 @@
 
                             <button id="copyAway" class="btn-save"
 
-                            style="
+                            style="position: fixed;
+                            top: 20%; right: 2em;
+                            transform: translateY(-50%);
                             z-index: 1000; border: 2px solid white;
                             color:white; background-color:#e4c800;
                             font-family: 'Roboto'; font-weight:bold;font-size:revert;
@@ -501,9 +587,8 @@
                             Copy</button>
 
                             `
-                                ultimo.insertAdjacentHTML('afterend', button);
                             }else{
-                                let div = document.getElementById("gameContent");
+
                                 button = `</br>
                             </br>
 
@@ -526,10 +611,10 @@
                             Copy Away Tactic</button>
 
                             `
-                                div.insertAdjacentHTML('beforeend', button);
+
                             }
 
-
+                            div.insertAdjacentHTML('beforeend', button);
 
 
                             let elemento = document.getElementById('copyHome');
@@ -1046,37 +1131,32 @@ cursor: default;
             window.location.reload();
         });
     }
-    const W = (typeof unsafeWindow !== 'undefined' && unsafeWindow) ? unsafeWindow : window;
-
     function tryInstallHook() {
-        if (W.__mlHookInstalled) return true;
-        if (typeof W.MyGame === 'undefined' || !W.MyGame.prototype.Load010SetupMainSceneInstance) return false;
+        if (window.__mlHookInstalled) return true;
+        if (typeof MyGame === 'undefined' || !MyGame.prototype.Load010SetupMainSceneInstance) return false;
 
-        const original = W.MyGame.prototype.Load010SetupMainSceneInstance;
-        W.MyGame.prototype.Load010SetupMainSceneInstance = function () {
+        const original = MyGame.prototype.Load010SetupMainSceneInstance;
+        MyGame.prototype.Load010SetupMainSceneInstance = function () {
             if (captureMatchLoader) {
-                W.matchLoader = arguments[0];
+                window.matchLoader = arguments[0];
                 captureMatchLoader = false;
             }
             return original.apply(this, arguments);
         };
-        W.__mlHookInstalled = true;
+        window.__mlHookInstalled = true;
         return true;
     }
-
-
-
     function startCapture(cb) {
         clearInterval(mlTimer);
-        W.matchLoader = undefined;
+        window.matchLoader = undefined;
         captureMatchLoader = true;
 
         mlTimer = setInterval(() => {
             tryInstallHook();                       // reintenta hasta que MyGame exista
-            if (W.matchLoader) {                    // ya capturado
+            if (window.matchLoader) {               // ya capturado
                 clearInterval(mlTimer);
                 captureMatchLoader = false;
-                if (cb) cb(W.matchLoader);
+                if (cb) cb(window.matchLoader);
             }
         }, 200);
     }
@@ -1098,26 +1178,19 @@ cursor: default;
             credentials: "include"
         });
         if (!res.ok) throw new Error("HTTP " + res.status);
+
         const data = await res.text();
         const result = data.match(/trainingField.players\s*=\s*({.+})/);
         if (!result) throw new Error("playerMax no encontrado");
+
         let pmax = JSON.parse(result[1]);
         return pmax;
     }
     async function copyXML(mid, localAway) {
-        const blobPromise = (async () => {
-            const pmax = await getMaxAsync();
-            const tmpXML = Stats2XML(mid, localAway, pmax);
-            return new Blob([tmpXML], { type: "text/plain" });
-        })();
-
-        try {
-            await navigator.clipboard.write([new ClipboardItem({ "text/plain": blobPromise })]);
-        } catch (e) {
-            // Fallback (PC / navegadores sin ClipboardItem con promesa)
-            const xml = await (await blobPromise).text();
-            GM_setClipboard(xml);
-        }
+        const pmax = await getMaxAsync()
+        let tmpXML = Stats2XML(mid, localAway,pmax);
+        GM_setClipboard(tmpXML);
+        //navigator.clipboard.writeText(tmpXML);
         notifySnackBar("Correct", "Tactic copied to clipboard!");
     }
     function StatsToPos_X (i, IsLocal) {
@@ -1129,17 +1202,7 @@ cursor: default;
         return ret;
     }
     function Stats2XML(mid, localAway, players) {
-        const W = (typeof unsafeWindow !== 'undefined' && unsafeWindow) ? unsafeWindow : window;
-        const jq = W.jQuery || W.$ || (typeof $ !== 'undefined' ? $ : null);
-        let data;
-        try {
-            data = jq.parseXML(W.matchLoader.matchXml.xmlText);
-        } catch (e) {
-            alert("Stats2XML error: " + e.message +
-                " | ml: " + typeof W.matchLoader +
-                " | jq: " + typeof jq);
-            return "";
-        }
+        let data = $.parseXML(window.matchLoader.matchXml.xmlText)
         if (!data) {
             return "";
         }
@@ -1199,6 +1262,18 @@ cursor: default;
             document.getElementById("legendDivStxc").style.bottom="67%"
         }
     }, 2000);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 })();
