@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.69
+// @version      0.70
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -1190,6 +1190,7 @@ cursor: default;
     async function copyXML(mid, localAway) {
         alert("aaa")
         const pmax = await getMaxAsync()
+        alert("salgo de pmax")
         let tmpXML = Stats2XML(mid, localAway,pmax);
         GM_setClipboard(tmpXML);
         alert(tmpXML)
@@ -1205,11 +1206,14 @@ cursor: default;
         return ret;
     }
     function Stats2XML(mid, localAway, players) {
+        alert("aqui")
         let data = $.parseXML(window.matchLoader.matchXml.xmlText)
-        alert(data)
+        alert("aqui1")
+        alert(window.matchLoader.matchXml.xmlText)
         if (!data) {
             return "";
         }
+        alert("aqui2")
         let teams = data.documentElement.getElementsByTagName("Team");
         let team = localAway ? teams[0] : teams[1];
 
