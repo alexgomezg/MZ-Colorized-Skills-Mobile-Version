@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.67
+// @version      0.68
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
@@ -1187,9 +1187,11 @@ cursor: default;
         return pmax;
     }
     async function copyXML(mid, localAway) {
+        alert("aaa")
         const pmax = await getMaxAsync()
         let tmpXML = Stats2XML(mid, localAway,pmax);
         GM_setClipboard(tmpXML);
+        alert(tmpXML)
         //navigator.clipboard.writeText(tmpXML);
         notifySnackBar("Correct", "Tactic copied to clipboard!");
     }
